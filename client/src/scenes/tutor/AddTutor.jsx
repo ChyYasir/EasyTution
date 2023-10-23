@@ -12,8 +12,10 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
+  Grid,
   InputLabel,
   MenuItem,
+  Paper,
   Radio,
   RadioGroup,
   Select,
@@ -27,13 +29,20 @@ import { CheckBox } from "@mui/icons-material";
 import { useTheme } from "@emotion/react";
 const AddTutor = () => {
   const theme = useTheme();
-  const { control, handleSubmit, reset } = useForm();
+
+  const {
+    handleSubmit,
+    control,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const dispatch = useDispatch();
   const [addTutor] = useAddTutorMutation();
   const onSubmit = async (data) => {
     setIsSubmitting(true);
-    // console.log(data);
+    console.log(data);
     try {
       await addTutor(data).unwrap();
       alert("Tutor Added Successfully!!!");
@@ -45,146 +54,204 @@ const AddTutor = () => {
       setIsSubmitting(false);
     }
   };
-
-  const preferredLocations = ["Mohakhali", "Khilgaon"];
+  const subjects = ["Physics", "Chemistry"];
+  const locations = ["Mohakhali", "Khilgaon"];
   return (
     <>
       <Container component="main">
-        <Header title="Tutor Form" subtitle="Fill out this form" />
+        <Header
+          title="Tutor Form"
+          subtitle="Fill out this form carefully to add a new tutor."
+        />
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Controller
-            name="name"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="Name"
-                variant="outlined"
-                sx={{ width: "50%" }}
-                margin="normal"
-              />
-            )}
-          />
-          <Controller
-            name="phoneNumber"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="Phone Number"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-              />
-            )}
-          />
-          <Controller
-            name="gender"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <FormControl component="fieldset">
-                <FormLabel component="legend">Gender</FormLabel>
-                <RadioGroup {...field}>
-                  <FormControlLabel
-                    value="male"
-                    control={<Radio />}
-                    label="Male"
+          {/* <Paper
+            elevation={3}
+            style={{
+              padding: "16px",
+              backgroundColor: theme.palette.background.alt,
+            }}
+          > */}
+          <Grid container spacing={2} sx={{ marginTop: "1.5rem" }}>
+            <Grid item xs={12}>
+              <Controller
+                name="name"
+                control={control}
+                defaultValue=""
+                rules={{ required: "Name is required" }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Name"
+                    variant="outlined"
+                    fullWidth
+                    error={!!errors.name}
+                    helperText={errors.name ? errors.name.message : ""}
                   />
-                  <FormControlLabel
-                    value="female"
-                    control={<Radio />}
-                    label="Female"
-                  />
-                </RadioGroup>
-              </FormControl>
-            )}
-          />
-
-          <Controller
-            name="preferredSubjects"
-            control={control}
-            defaultValue={[]}
-            render={({ field }) => (
-              <FormControl variant="outlined" fullWidth margin="normal">
-                <InputLabel>Preferred Subjects</InputLabel>
-                <Select
-                  {...field}
-                  multiple
-                  label="Preferred Subjects"
-                  renderValue={(selected) => (
-                    <div>
-                      {selected.map((subject) => (
-                        <Chip key={subject} label={subject} color="primary" />
-                      ))}
-                    </div>
-                  )}
-                >
-                  <MenuItem value="Math">Math</MenuItem>
-                  <MenuItem value="Science">Science</MenuItem>
-                  <MenuItem value="History">History</MenuItem>
-                  {/* Add more subjects as MenuItem components */}
-                </Select>
-              </FormControl>
-            )}
-          />
-
-          <Controller
-            name="educationBoard"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <FormControl variant="outlined" fullWidth margin="normal">
-                <InputLabel>Education Board</InputLabel>
-                <Select {...field} label="Education Board">
-                  <MenuItem value="CBSE">CBSE</MenuItem>
-                  <MenuItem value="ICSE">ICSE</MenuItem>
-                  {/* Add more education board options */}
-                </Select>
-              </FormControl>
-            )}
-          />
-          <Controller
-            name="upToClass"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <FormControl variant="outlined" fullWidth margin="normal">
-                <InputLabel>Up To Class</InputLabel>
-                <Select {...field} label="Up To Class">
-                  <MenuItem value="10">10th</MenuItem>
-                  <MenuItem value="12">12th</MenuItem>
-                  {/* Add more class options */}
-                </Select>
-              </FormControl>
-            )}
-          />
-          <Controller
-            name="preferredLocation"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="Preferred Location"
-                variant="outlined"
-                fullWidth
-                margin="normal"
+                )}
               />
-            )}
-          />
+            </Grid>
+            <Grid item xs={12}>
+              <Controller
+                name="phoneNumber"
+                control={control}
+                defaultValue=""
+                rules={{ required: "Phone Number is required" }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Phone Number"
+                    variant="outlined"
+                    fullWidth
+                    error={!!errors.phoneNumber}
+                    helperText={
+                      errors.phoneNumber ? errors.phoneNumber.message : ""
+                    }
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Controller
+                name="educationBoard"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    select
+                    label="Education Board"
+                    variant="outlined"
+                    fullWidth
+                  >
+                    <MenuItem value="Cambridge">Cambridge</MenuItem>
+                    <MenuItem value="Edexcel">Edexcel</MenuItem>
+                    <MenuItem value="IBA">IBA</MenuItem>
+                    <MenuItem value="National Curriculam">
+                      National Curriculam
+                    </MenuItem>
+                    {/* Add more options as needed */}
+                  </TextField>
+                )}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Controller
+                name="gender"
+                control={control}
+                defaultValue=""
+                rules={{ required: "Gender is required" }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    select
+                    label="Gender"
+                    variant="outlined"
+                    fullWidth
+                    error={!!errors.gender}
+                    helperText={errors.gender ? errors.gender.message : ""}
+                  >
+                    <MenuItem value="Male">Male</MenuItem>
+                    <MenuItem value="Female">Female</MenuItem>
 
-          {/* Add more fields for other tutor information */}
+                    {/* Add more options as needed */}
+                  </TextField>
+                )}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Controller
+                name="preferredSubjects"
+                control={control}
+                render={({ field }) => (
+                  <Autocomplete
+                    {...field}
+                    multiple
+                    id="preferredSubjects"
+                    options={subjects}
+                    defaultValue={[]}
+                    onChange={(_, newValues) => {
+                      setValue("preferredSubjects", newValues);
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Preferred Subjects"
+                        variant="outlined"
+                        error={!!errors.preferredSubjects}
+                        helperText={
+                          errors.preferredSubjects
+                            ? errors.preferredSubjects.message
+                            : ""
+                        }
+                      />
+                    )}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Controller
+                name="upToClass"
+                control={control}
+                defaultValue=""
+                rules={{ required: "Class information is required" }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Up to Class"
+                    variant="outlined"
+                    fullWidth
+                    error={!!errors.upToClass}
+                    helperText={
+                      errors.upToClass ? errors.upToClass.message : ""
+                    }
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Controller
+                name="preferredLocations"
+                control={control}
+                render={({ field }) => (
+                  <Autocomplete
+                    {...field}
+                    multiple
+                    id="preferredLocations"
+                    options={locations}
+                    defaultValue={[]}
+                    onChange={(_, newValues) => {
+                      setValue("preferredLocations", newValues);
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Preferred Locations"
+                        variant="outlined"
+                        error={!!errors.preferredLocations}
+                        helperText={
+                          errors.preferredLocations
+                            ? errors.preferredLocations.message
+                            : ""
+                        }
+                      />
+                    )}
+                  />
+                )}
+              />
+            </Grid>
+          </Grid>
           <Button
             type="submit"
             variant="contained"
             color="primary"
             disabled={isSubmitting}
+            sx={{ marginTop: "2rem" }}
           >
             {isSubmitting ? "Adding..." : "Add Tutor"}
           </Button>
+
+          {/* </Paper> */}
         </form>
       </Container>
     </>

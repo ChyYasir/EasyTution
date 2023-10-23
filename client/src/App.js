@@ -10,6 +10,7 @@ import Dashboard from "./scenes/dashboard/Dashboard";
 import AddTutor from "./scenes/tutor/AddTutor";
 import AllTutors from "./scenes/tutor/AllTutors";
 import TutorProfile from "./scenes/tutor/TutorProfile";
+import AddOffer from "./scenes/offer/AddOffer";
 
 function App() {
   const mode = useSelector((state) => state.global.mode);
@@ -26,6 +27,7 @@ function App() {
               <Route path="/addtutor" element={<AddTutor />} />
               <Route path="/alltutors" element={<AllTutors />} />
               <Route path="/tutorprofile" element={<TutorProfile />} />
+              <Route path="/addoffer" element={<AddOffer />} />
             </Route>
           </Routes>
         </ThemeProvider>

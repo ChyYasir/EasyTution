@@ -3,7 +3,7 @@ import { MaterialReactTable } from "material-react-table";
 import { Link } from "react-router-dom";
 import { Box, Button, Typography } from "@mui/material";
 import Header from "../../components/Header";
-const Example = () => {
+const AllTutors = () => {
   //data and fetching state
   const [data, setData] = useState([]);
   const [isError, setIsError] = useState(false);
@@ -218,6 +218,12 @@ const Example = () => {
           </Button> */}
           </div>
         )}
+        muiTableHeadCellProps={{
+          align: "center",
+        }}
+        muiTableBodyCellProps={{
+          align: "center",
+        }}
         state={{
           columnFilters,
           globalFilter,
@@ -232,4 +238,4 @@ const Example = () => {
   );
 };
 
-export default Example;
+export default AllTutors;

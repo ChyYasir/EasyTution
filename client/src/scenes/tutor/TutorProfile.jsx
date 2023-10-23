@@ -1,230 +1,274 @@
-import React from "react";
+import React, { useState } from "react";
 import {
-  Button,
   Container,
   Paper,
-  Grid,
-  Typography,
-  List,
-  ListItem,
-  ListItemText,
-  Divider,
   Avatar,
+  Button,
+  Tab,
+  Tabs,
+  Typography,
+  Box,
+  Grid,
+  Divider,
 } from "@mui/material";
+import { PhotoCamera } from "@mui/icons-material";
+import { useTheme } from "@emotion/react";
 
-const TutorProfile = () => {
-  const aboutInfo = [{ label: "Name", value: "Yasir " }];
-  const experienceInfo = [{ title: "BSC", date: "12.02.2000" }];
-  const educationInfo = [{ title: "BSC", date: "12.02.2000" }];
+const Profile = () => {
+  const theme = useTheme();
+  const [value, setValue] = React.useState(0);
+  const [hovered, setHovered] = useState(false);
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const handleMouseEnter = () => {
+    setHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setHovered(false);
+  };
   return (
-    <Container maxWidth="lg" sx={{ marginTop: 5 }}>
-      <Paper
-        elevation={3}
-        sx={{ background: "linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)" }}
-      >
-        <Container>
-          <Grid
-            container
-            alignItems="center"
-            justifyContent="space-between"
-            p={2}
+    <Container>
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={4}>
+          <Paper
+            elevation={3}
+            style={{
+              padding: "3%",
+              marginTop: "3%",
+              marginBottom: "3%",
+              borderRadius: "0.5rem",
+              background: theme.palette.background.alt,
+            }}
           >
-            <Typography
-              variant="h6"
-              sx={{ fontWeight: "bold", color: "white" }}
-            >
-              example profile
-            </Typography>
-            <Button
-              sx={{ display: { xs: "block", md: "none" }, background: "white" }}
-            >
-              <svg
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                width="24"
-                height="24"
-              >
-                <path d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM9 15a1 1 0 011-1h6a1 1 0 110 2h-6a1 1 0 01-1-1z"></path>
-              </svg>
-            </Button>
-          </Grid>
-          <Grid container justifyContent="space-between">
-            <Grid item xs={12} md={6}>
-              <Typography
-                variant="h4"
-                sx={{ fontWeight: "bold", color: "white" }}
-              >
-                Jane Doe
-              </Typography>
-              <Typography
-                variant="h6"
-                sx={{ fontWeight: "bold", color: "white" }}
-              >
-                Owner at Her Company Inc.
-              </Typography>
-              <Typography variant="body1" sx={{ color: "white" }}>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Reprehenderit, eligendi dolorum sequi illum qui unde aspernatur
-                non deserunt.
-              </Typography>
-              <List
-                sx={{
-                  background: "rgba(255, 255, 255, 0.1)",
-                  color: "white",
-                  "& li": { padding: 2 },
-                }}
-              >
-                <ListItem>
-                  <ListItemText primary="Status" />
-                  <span>
-                    <span
-                      sx={{
-                        background: "green.500",
-                        padding: 1,
-                        color: "white",
-                        borderRadius: 2,
-                        fontSize: 14,
-                      }}
-                    >
-                      Active
-                    </span>
-                  </span>
-                </ListItem>
-                <Divider />
-                <ListItem>
-                  <ListItemText primary="Member since" />
-                  <span>Nov 07, 2016</span>
-                </ListItem>
-              </List>
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              md={6}
+            <Box
               sx={{
                 display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
+                flexDirection: "row",
+                position: "relative",
               }}
             >
-              <Avatar
-                sx={{
-                  width: 120,
-                  height: 120,
-                  border: "4px solid white",
-                  "& img": { width: "100%", height: "100%" },
-                }}
-                src="https://lavinephotography.com.au/wp-content/uploads/2017/01/PROFILE-Photography-112.jpg"
-                alt="Profile Image"
-              />
-            </Grid>
-          </Grid>
-        </Container>
-      </Paper>
-      <Container maxWidth="lg" sx={{ mt: 4 }}>
-        <Grid container spacing={4}>
-          {/* <Grid item xs={12} md={3}>
-            <Paper elevation={3} sx={{ p: 2 }}>
-              <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                Similar Profiles
-              </Typography>
-              <Grid container spacing={2} mt={2}>
-                {similarProfiles.map((profile, index) => (
-                  <Grid item xs={4} key={index}>
-                    <Avatar
-                      sx={{
-                        width: 80,
-                        height: 80,
-                        border: "2px solid primary.main",
-                        "& img": { width: "100%", height: "100%" },
+              <Box
+                style={{ textAlign: "center", position: "relative" }}
+                className="profile-img"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <Avatar
+                  alt="Profile Picture"
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS52y5aInsxSm31CvHOFHWujqUx_wWTS9iM6s7BAm21oEN_RiGoog"
+                  sx={{ width: 200, height: 200, borderRadius: 0 }}
+                />
+                {hovered && (
+                  <label
+                    htmlFor="icon-button-file"
+                    style={{
+                      position: "absolute",
+                      overflow: "hidden",
+                      width: "100%",
+                      height: "100%",
+                      // transform: "translateX(-50%)",
+                      border: "none",
+                      borderRadius: 0,
+                      fontSize: "15px",
+                      background: "#212529b8",
+                      bottom: "0",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      cursor: "pointer",
+                      // left: "15%",
+                    }}
+                  >
+                    Change Photo
+                    <input
+                      accept="image/*"
+                      id="icon-button-file"
+                      type="file"
+                      style={{
+                        position: "absolute",
+                        opacity: 0,
+                        right: 0,
+                        top: 0,
                       }}
-                      src={profile.image}
-                      alt={profile.name}
                     />
-                    <Typography
-                      variant="body2"
-                      sx={{ fontWeight: "bold", color: "primary.main", mt: 1 }}
-                    >
-                      {profile.name}
-                    </Typography>
-                  </Grid>
-                ))}
-              </Grid>
-            </Paper>
-          </Grid> */}
-          <Grid item xs={12} md={12}>
-            <Paper elevation={3} sx={{ p: 2 }}>
-              <Grid container spacing={4}>
-                <Grid item xs={12} md={6}>
-                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                    About
-                  </Typography>
-                  <List>
-                    {aboutInfo.map((info, index) => (
-                      <ListItem key={index}>
-                        <ListItemText
-                          primary={info.label}
-                          secondary={info.value}
-                        />
-                      </ListItem>
-                    ))}
-                  </List>
-                  <Button variant="contained" sx={{ width: "100%", mt: 2 }}>
-                    Show Full Information
-                  </Button>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                    Experience
-                  </Typography>
-                  <List>
-                    {experienceInfo.map((info, index) => (
-                      <ListItem key={index}>
-                        <ListItemText
-                          primary={info.title}
-                          secondary={info.date}
-                        />
-                      </ListItem>
-                    ))}
-                  </List>
-                  <Typography variant="h6" sx={{ fontWeight: "bold", mt: 2 }}>
-                    Education
-                  </Typography>
-                  <List>
-                    {educationInfo.map((info, index) => (
-                      <ListItem key={index}>
-                        <ListItemText
-                          primary={info.title}
-                          secondary={info.date}
-                        />
-                      </ListItem>
-                    ))}
-                  </List>
-                </Grid>
-              </Grid>
-            </Paper>
-          </Grid>
+                    {/* <PhotoCamera fontSize="large" /> */}
+                  </label>
+                )}
+              </Box>
+
+              {/* <Box>
+                <Button variant="outlined">Edit Profile</Button>
+              </Box> */}
+            </Box>
+          </Paper>
         </Grid>
-      </Container>
+        <Grid item xs={12} md={8}>
+          <Paper
+            elevation={3}
+            style={{
+              padding: "3%",
+              marginTop: "3%",
+              marginBottom: "3%",
+              borderRadius: "0.5rem",
+              background: theme.palette.background.alt,
+            }}
+          >
+            <Box>
+              <div className="profile-head">
+                <Typography variant="h5">Kshiti Ghelani</Typography>
+                <Typography variant="h6">Web Developer and Designer</Typography>
+                <Typography>
+                  RANKINGS: <span>8/10</span>
+                </Typography>
+                <Tabs value={value} onChange={handleChange} centered>
+                  <Tab
+                    label="About"
+                    sx={{
+                      fontWeight: "bold",
+                      color:
+                        value === 0
+                          ? theme.palette.secondary[400]
+                          : theme.palette.secondary[300],
+                    }}
+                  />
+                  <Tab
+                    label="Timeline"
+                    sx={{
+                      fontWeight: "bold",
+                      color:
+                        value === 1
+                          ? theme.palette.secondary[400]
+                          : theme.palette.secondary[300],
+                    }}
+                  />
+                </Tabs>
+              </div>
+            </Box>
+            <Box className="profile-content">
+              {value === 0 && (
+                <Box>
+                  <Grid container spacing={2} sx={{ marginBottom: "0.5rem" }}>
+                    <Grid item xs={6}>
+                      <Typography variant="h6" style={{ fontWeight: 600 }}>
+                        User Id
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="h6">Kshiti123</Typography>
+                    </Grid>
+                  </Grid>
+                  <Divider />
+                  <Grid container spacing={2} sx={{ marginBottom: "0.5rem" }}>
+                    <Grid item xs={6}>
+                      <Typography variant="h6" style={{ fontWeight: 600 }}>
+                        User Id
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="h6">Kshiti123</Typography>
+                    </Grid>
+                  </Grid>
+                  <Divider />
+                  <div className="row">
+                    <div className="col-md-6">
+                      <Typography variant="body1">Name</Typography>
+                    </div>
+                    <div className="col-md-6">
+                      <Typography variant="body1">Kshiti Ghelani</Typography>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <Typography variant="body1">Email</Typography>
+                    </div>
+                    <div className="col-md-6">
+                      <Typography variant="body1">
+                        kshitighelani@gmail.com
+                      </Typography>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <Typography variant="body1">Phone</Typography>
+                    </div>
+                    <div className="col-md-6">
+                      <Typography variant="body1">123 456 7890</Typography>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <Typography variant="body1">Profession</Typography>
+                    </div>
+                    <div className="col-md-6">
+                      <Typography variant="body1">
+                        Web Developer and Designer
+                      </Typography>
+                    </div>
+                  </div>
+                </Box>
+              )}
+              {value === 1 && (
+                <div>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <Typography variant="body1">Experience</Typography>
+                    </div>
+                    <div className="col-md-6">
+                      <Typography variant="body1">Expert</Typography>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <Typography variant="body1">Hourly Rate</Typography>
+                    </div>
+                    <div className="col-md-6">
+                      <Typography variant="body1">10$/hr</Typography>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <Typography variant="body1">Total Projects</Typography>
+                    </div>
+                    <div className="col-md-6">
+                      <Typography variant="body1">230</Typography>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <Typography variant="body1">English Level</Typography>
+                    </div>
+                    <div className="col-md-6">
+                      <Typography variant="body1">Expert</Typography>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <Typography variant="body1">Availability</Typography>
+                    </div>
+                    <div className="col-md-6">
+                      <Typography variant="body1">6 months</Typography>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-md-12">
+                      <Typography variant="body1">Your Bio</Typography>
+                      <Typography variant="body1">
+                        Your detail description
+                      </Typography>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </Box>
+          </Paper>
+        </Grid>
+      </Grid>
     </Container>
   );
 };
 
-export default TutorProfile;
-
-const similarProfiles = [
-  {
-    name: "Kojstantin",
-    image:
-      "https://cdn.australianageingagenda.com.au/wp-content/uploads/2015/06/28085920/Phil-Beckett-2-e1435107243361.jpg",
-  },
-  {
-    name: "James",
-    image: "https://avatars2.githubusercontent.com/u/24622175?s=60&v=4",
-  },
-  {
-    name: "Natie",
-    image:
-      "https://lavinephotography.com.au/wp-content/uploads/2017/01/PROFILE-Photography-112.jpg",
-  },
-];
+export default Profile;

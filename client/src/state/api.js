@@ -19,7 +19,15 @@ export const api = createApi({
         params: { start, size, filters, sorting, globalFilter },
       }),
     }),
+    addOffer: builder.mutation({
+      query: (offer) => ({
+        url: "offer/add",
+        method: "POST",
+        body: offer,
+      }),
+    }),
   }),
 });
 
-export const { useAddTutorMutation, useGetTutorsQuery } = api;
+export const { useAddTutorMutation, useGetTutorsQuery, useAddOfferMutation } =
+  api;

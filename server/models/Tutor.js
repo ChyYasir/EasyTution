@@ -8,8 +8,8 @@ const tutorSchema = new mongoose.Schema(
     educationBoard: String,
     gender: String,
     preferredSubjects: [String],
-    upToClass: String,
-    preferredLocation: String,
+    upToClass: Number,
+    preferredLocations: [String],
   },
   { timestamps: true }
 );
