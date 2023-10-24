@@ -3,6 +3,25 @@ import { MaterialReactTable } from "material-react-table";
 import { Link } from "react-router-dom";
 import { Box, Button, Typography } from "@mui/material";
 import Header from "../../components/Header";
+
+function HeaderCell({ column }) {
+  return (
+    <>
+      <Box
+        sx={{
+          cursor: "pointer",
+          whiteSpace: "normal", // Allow text to wrap to the next line
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+        }}
+      >
+        <Typography sx={{ fontWeight: "bold" }}>
+          {column.columnDef.header}
+        </Typography>
+      </Box>
+    </>
+  );
+}
 const AllTutors = () => {
   //data and fetching state
   const [data, setData] = useState([]);
@@ -71,6 +90,8 @@ const AllTutors = () => {
       {
         accessorKey: "_id",
         header: "ID",
+        Header: ({ column }) => <HeaderCell column={column} />,
+
         Cell: ({ cell }) => {
           // return <div onClick={() => ></div>,
           return (
@@ -93,18 +114,22 @@ const AllTutors = () => {
       {
         accessorKey: "name",
         header: "Name",
+        Header: ({ column }) => <HeaderCell column={column} />,
       },
       {
         accessorKey: "phoneNumber",
         header: "Phone Number",
+        Header: ({ column }) => <HeaderCell column={column} />,
       },
       {
         accessorKey: "educationBoard",
         header: "Education Board",
+        Header: ({ column }) => <HeaderCell column={column} />,
       },
       {
         accessorKey: "createdAt",
         header: "Create Time",
+        Header: ({ column }) => <HeaderCell column={column} />,
         Cell: ({ cell }) => {
           const createdAtDate = new Date(cell.getValue());
           const date = createdAtDate.toLocaleDateString();
@@ -130,6 +155,7 @@ const AllTutors = () => {
       {
         accessorKey: "preferredSubjects",
         header: "Preferred Subjects",
+        Header: ({ column }) => <HeaderCell column={column} />,
         Cell: ({ cell }) => {
           // return <div onClick={() => ></div>,
           return (
@@ -152,10 +178,11 @@ const AllTutors = () => {
       {
         accessorKey: "gender",
         header: "Gender",
+        Header: ({ column }) => <HeaderCell column={column} />,
         muiTableBodyCellProps: ({ cell }) => ({
           sx: {
             backgroundColor:
-              cell.getValue() === "male" ? "rgba(22, 184, 44, 0.5)" : undefined,
+              cell.getValue() === "Male" ? "rgba(22, 184, 44, 0.5)" : undefined,
             // fontWeight: cell.column.id === 'age' && cell.getValue<number>() > 40 ? '700' : '400'
           },
         }),
@@ -218,8 +245,15 @@ const AllTutors = () => {
           </Button> */}
           </div>
         )}
+        defaultColumn={{
+          maxSize: 400,
+          minSize: 80,
+          size: 150, //default size is usually 180
+        }}
+        enableColumnResizing
         muiTableHeadCellProps={{
-          align: "center",
+          // align: "center",
+          padding: "none",
         }}
         muiTableBodyCellProps={{
           align: "center",
