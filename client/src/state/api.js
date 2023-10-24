@@ -12,12 +12,15 @@ export const api = createApi({
         body: tutor,
       }),
     }),
-    getTutors: builder.query({
+    getAllTutors: builder.query({
       query: ({ start, size, filters, sorting, globalFilter }) => ({
         url: "tutor/getAllTutors?",
         method: "GET",
         params: { start, size, filters, sorting, globalFilter },
       }),
+    }),
+    getTutor: builder.query({
+      query: (id) => `tutor/getTutor/${id}`,
     }),
     addOffer: builder.mutation({
       query: (offer) => ({
@@ -29,5 +32,9 @@ export const api = createApi({
   }),
 });
 
-export const { useAddTutorMutation, useGetTutorsQuery, useAddOfferMutation } =
-  api;
+export const {
+  useAddTutorMutation,
+  useGetAllTutorsQuery,
+  useGetTutorQuery,
+  useAddOfferMutation,
+} = api;

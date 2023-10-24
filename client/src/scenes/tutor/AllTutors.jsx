@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { MaterialReactTable } from "material-react-table";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Box, Button, Typography } from "@mui/material";
 import Header from "../../components/Header";
 
@@ -23,6 +23,7 @@ function HeaderCell({ column }) {
   );
 }
 const AllTutors = () => {
+  const navigate = useNavigate();
   //data and fetching state
   const [data, setData] = useState([]);
   const [isError, setIsError] = useState(false);
@@ -91,7 +92,7 @@ const AllTutors = () => {
         accessorKey: "_id",
         header: "ID",
         Header: ({ column }) => <HeaderCell column={column} />,
-
+        size: 180,
         Cell: ({ cell }) => {
           // return <div onClick={() => ></div>,
           return (
@@ -229,7 +230,8 @@ const AllTutors = () => {
               variant="contained"
               color="primary"
               onClick={() => {
-                console.info("View Profile", row.id);
+                // console.info("View Profile", row.id);
+                navigate(`/tutorprofile/${row.id}`);
               }}
             >
               View Profile

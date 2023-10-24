@@ -102,29 +102,52 @@ const AddOffer = () => {
             </Grid>
 
             <Grid item xs={12}>
-              <Controller
-                name="educationBoard"
-                control={control}
-                defaultValue=""
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    select
-                    label="Education Board"
-                    variant="outlined"
-                    fullWidth
-                  >
-                    <MenuItem value="Cambridge">Cambridge</MenuItem>
-                    <MenuItem value="Edexcel">Edexcel</MenuItem>
-                    <MenuItem value="IBA">IBA</MenuItem>
-                    <MenuItem value="National Curriculam">
-                      National Curriculam
-                    </MenuItem>
-                    {/* Add more options as needed */}
-                  </TextField>
-                )}
-              />
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <Controller
+                    name="class"
+                    control={control}
+                    defaultValue=""
+                    rules={{ required: "Class information is required" }}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        label="Class"
+                        variant="outlined"
+                        fullWidth
+                        error={!!errors.class}
+                        helperText={errors.class ? errors.class.message : ""}
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <Controller
+                    name="educationBoard"
+                    control={control}
+                    defaultValue=""
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        select
+                        label="Education Board"
+                        variant="outlined"
+                        fullWidth
+                      >
+                        <MenuItem value="Cambridge">Cambridge</MenuItem>
+                        <MenuItem value="Edexcel">Edexcel</MenuItem>
+                        <MenuItem value="IBA">IBA</MenuItem>
+                        <MenuItem value="National Curriculam">
+                          National Curriculam
+                        </MenuItem>
+                        {/* Add more options as needed */}
+                      </TextField>
+                    )}
+                  />
+                </Grid>
+              </Grid>
             </Grid>
+
             <Grid item xs={12}>
               <Controller
                 name="tutorGender"
@@ -149,24 +172,7 @@ const AddOffer = () => {
                 )}
               />
             </Grid>
-            <Grid item xs={12}>
-              <Controller
-                name="class"
-                control={control}
-                defaultValue=""
-                rules={{ required: "Class information is required" }}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    label="Class"
-                    variant="outlined"
-                    fullWidth
-                    error={!!errors.class}
-                    helperText={errors.class ? errors.class.message : ""}
-                  />
-                )}
-              />
-            </Grid>
+
             <Grid item xs={12}>
               <Controller
                 name="subjects"

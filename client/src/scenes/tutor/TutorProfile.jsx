@@ -13,12 +13,21 @@ import {
 } from "@mui/material";
 import { PhotoCamera } from "@mui/icons-material";
 import { useTheme } from "@emotion/react";
+import { useParams } from "react-router-dom";
+import { useGetTutorQuery } from "../../state/api";
 
 const Profile = () => {
+  const params = useParams();
+
+  // console.log(params.id);
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
   const [hovered, setHovered] = useState(false);
+
+  const { data } = useGetTutorQuery(params.id);
+  // console.log(data);
   const handleChange = (event, newValue) => {
+    console.log(newValue);
     setValue(newValue);
   };
 
@@ -29,6 +38,17 @@ const Profile = () => {
   const handleMouseLeave = () => {
     setHovered(false);
   };
+
+  const Profile = [
+    {
+      label: "Tutor ID",
+      content: `${data._id}`,
+    },
+    {
+      label: "Name",
+      content: `${data.name}`,
+    },
+  ];
   return (
     <Container>
       <Grid container spacing={3}>
@@ -63,7 +83,6 @@ const Profile = () => {
                 />
                 {hovered && (
                   <label
-                    htmlFor="icon-button-file"
                     style={{
                       position: "absolute",
                       overflow: "hidden",
@@ -124,25 +143,46 @@ const Profile = () => {
                 <Typography>
                   RANKINGS: <span>8/10</span>
                 </Typography>
-                <Tabs value={value} onChange={handleChange} centered>
+                <Tabs
+                  value={value}
+                  onChange={handleChange}
+                  centered
+                  indicatorColor="secondary"
+                >
                   <Tab
-                    label="About"
+                    label="Profile"
                     sx={{
                       fontWeight: "bold",
+                    }}
+                    style={{
                       color:
                         value === 0
-                          ? theme.palette.secondary[400]
-                          : theme.palette.secondary[300],
+                          ? theme.palette.secondary[300]
+                          : theme.palette.secondary[600],
                     }}
                   />
                   <Tab
                     label="Timeline"
                     sx={{
                       fontWeight: "bold",
+                    }}
+                    style={{
                       color:
                         value === 1
-                          ? theme.palette.secondary[400]
-                          : theme.palette.secondary[300],
+                          ? theme.palette.secondary[300]
+                          : theme.palette.secondary[600],
+                    }}
+                  />
+                  <Tab
+                    label="Education"
+                    sx={{
+                      fontWeight: "bold",
+                    }}
+                    style={{
+                      color:
+                        value === 2
+                          ? theme.palette.secondary[300]
+                          : theme.palette.secondary[600],
                     }}
                   />
                 </Tabs>
@@ -151,64 +191,30 @@ const Profile = () => {
             <Box className="profile-content">
               {value === 0 && (
                 <Box>
-                  <Grid container spacing={2} sx={{ marginBottom: "0.5rem" }}>
-                    <Grid item xs={6}>
-                      <Typography variant="h6" style={{ fontWeight: 600 }}>
-                        User Id
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Typography variant="h6">Kshiti123</Typography>
-                    </Grid>
-                  </Grid>
-                  <Divider />
-                  <Grid container spacing={2} sx={{ marginBottom: "0.5rem" }}>
-                    <Grid item xs={6}>
-                      <Typography variant="h6" style={{ fontWeight: 600 }}>
-                        User Id
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <Typography variant="h6">Kshiti123</Typography>
-                    </Grid>
-                  </Grid>
-                  <Divider />
-                  <div className="row">
-                    <div className="col-md-6">
-                      <Typography variant="body1">Name</Typography>
-                    </div>
-                    <div className="col-md-6">
-                      <Typography variant="body1">Kshiti Ghelani</Typography>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-md-6">
-                      <Typography variant="body1">Email</Typography>
-                    </div>
-                    <div className="col-md-6">
-                      <Typography variant="body1">
-                        kshitighelani@gmail.com
-                      </Typography>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-md-6">
-                      <Typography variant="body1">Phone</Typography>
-                    </div>
-                    <div className="col-md-6">
-                      <Typography variant="body1">123 456 7890</Typography>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-md-6">
-                      <Typography variant="body1">Profession</Typography>
-                    </div>
-                    <div className="col-md-6">
-                      <Typography variant="body1">
-                        Web Developer and Designer
-                      </Typography>
-                    </div>
-                  </div>
+                  {Profile.map(({ label, content }) => {
+                    return (
+                      <Box>
+                        <Grid
+                          container
+                          spacing={2}
+                          sx={{ marginBottom: "0.5rem" }}
+                        >
+                          <Grid item xs={6}>
+                            <Typography
+                              variant="h6"
+                              style={{ fontWeight: 600 }}
+                            >
+                              {label}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={6}>
+                            <Typography variant="h6">{content}</Typography>
+                          </Grid>
+                        </Grid>
+                        <Divider />
+                      </Box>
+                    );
+                  })}
                 </Box>
               )}
               {value === 1 && (

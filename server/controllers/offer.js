@@ -26,9 +26,11 @@ export const addOffer = async (req, res) => {
 
     // Create the offer and add matched tutors with their contact status
     newOffer.matchedTutors = matchedTutors.map((tutor) => ({
-      tutor: tutor._id,
+      tutor: tutor,
       contacted: false, // Set to true if contacted
     }));
+    // const result = await newOffer.populate("Tutor");
+    // console.log(result);
     await newOffer.save();
     res.status(201).json({ message: "Offer added successfully" });
   } catch (error) {

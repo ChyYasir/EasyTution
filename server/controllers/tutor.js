@@ -11,7 +11,7 @@ export const addTutor = async (req, res) => {
   }
 };
 
-export const getTutors = async (req, res) => {
+export const getAllTutors = async (req, res) => {
   try {
     let { start, size, filters, sorting, globalFilter } = req.query;
 
@@ -71,5 +71,15 @@ export const getTutors = async (req, res) => {
   } catch (error) {
     console.error({ error: error.message });
     res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const getTutor = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await Tutor.findById(id);
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
   }
 };
