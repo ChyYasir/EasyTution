@@ -23,9 +23,9 @@ const Profile = () => {
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
   const [hovered, setHovered] = useState(false);
-
+  console.log(params.id);
   const { data } = useGetTutorQuery(params.id);
-  // console.log(data);
+  console.log(data);
   const handleChange = (event, newValue) => {
     console.log(newValue);
     setValue(newValue);
@@ -42,11 +42,11 @@ const Profile = () => {
   const Profile = [
     {
       label: "Tutor ID",
-      content: `${data._id}`,
+      content: `${data?._id}`,
     },
     {
       label: "Name",
-      content: `${data.name}`,
+      content: `${data?.name}`,
     },
   ];
   return (

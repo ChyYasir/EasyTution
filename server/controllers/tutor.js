@@ -3,6 +3,7 @@ import Tutor from "../models/Tutor.js";
 export const addTutor = async (req, res) => {
   try {
     const newTutor = new Tutor(req.body);
+    console.log(newTutor);
     await newTutor.save();
     res.status(201).json({ message: "Tutor added successfully" });
   } catch (error) {
@@ -77,9 +78,11 @@ export const getAllTutors = async (req, res) => {
 export const getTutor = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await Tutor.findById(id);
-    res.status(200).json(user);
+    // console.log("hello");
+    const tutor = await Tutor.findById(id);
+    res.status(200).json(tutor);
   } catch (error) {
+    console.error({ error: error.message });
     res.status(404).json({ message: error.message });
   }
 };

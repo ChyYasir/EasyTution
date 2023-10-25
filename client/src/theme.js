@@ -1,18 +1,31 @@
 // color design tokens export
 export const tokensDark = {
   grey: {
+    // 0: "#ffffff", // manually adjusted
+    // 10: "#f6f6f6", // manually adjusted
+    // 50: "#f0f0f0", // manually adjusted
+    // 100: "#e0e0e0",
+    // 200: "#c2c2c2",
+    // 300: "#a3a3a3",
+    // 400: "#858585",
+    // 500: "#666666",
+    // 600: "#525252",
+    // 700: "#3d3d3d",
+    // 800: "#292929",
+    // 900: "#141414",
+    // 1000: "#000000", // manually adjusted
     0: "#ffffff", // manually adjusted
     10: "#f6f6f6", // manually adjusted
-    50: "#f0f0f0", // manually adjusted
-    100: "#e0e0e0",
-    200: "#c2c2c2",
-    300: "#a3a3a3",
-    400: "#858585",
-    500: "#666666",
-    600: "#525252",
-    700: "#3d3d3d",
-    800: "#292929",
-    900: "#141414",
+    50: "#eff6ff", // manually adjusted
+    100: "#dbeafe",
+    200: "#bfdbfe",
+    300: "#93c5fd",
+    400: "#60a5fa",
+    500: "#3b82f6",
+    600: "#2563eb",
+    700: "#1d4ed8",
+    800: "#1e40af",
+    900: "#1e3a8a",
     1000: "#000000", // manually adjusted
   },
   primary: {
