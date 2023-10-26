@@ -29,6 +29,15 @@ export const api = createApi({
         body: offer,
       }),
     }),
+    getAvailableOffer: builder.query({
+      query: (id) => `offer/getAvailableOffer/${id}`,
+    }),
+    deleteAvailableOffer: builder.mutation({
+      query: (id) => ({
+        url: `/offer/available/delete/${id}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
@@ -37,4 +46,6 @@ export const {
   useGetAllTutorsQuery,
   useGetTutorQuery,
   useAddOfferMutation,
+  useGetAvailableOfferQuery,
+  useDeleteAvailableOfferMutation,
 } = api;

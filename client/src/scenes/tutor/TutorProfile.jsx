@@ -24,7 +24,7 @@ const Profile = () => {
   const [value, setValue] = React.useState(0);
   const [hovered, setHovered] = useState(false);
   console.log(params.id);
-  const { data } = useGetTutorQuery(params.id);
+  const { data, isLoading, isError } = useGetTutorQuery(params.id);
   console.log(data);
   const handleChange = (event, newValue) => {
     console.log(newValue);
@@ -49,6 +49,9 @@ const Profile = () => {
       content: `${data?.name}`,
     },
   ];
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
   return (
     <Container>
       <Grid container spacing={3}>

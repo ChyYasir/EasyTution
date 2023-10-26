@@ -11,6 +11,8 @@ import AddTutor from "./scenes/tutor/AddTutor";
 import AllTutors from "./scenes/tutor/AllTutors";
 import TutorProfile from "./scenes/tutor/TutorProfile";
 import AddOffer from "./scenes/offer/AddOffer";
+import AvailableOffers from "./scenes/offer/AvailableOffers";
+import AvailableOfferMatchedTutor from "./scenes/offer/AvailableOfferMatchedTutor";
 
 function App() {
   const mode = useSelector((state) => state.global.mode);
@@ -28,6 +30,11 @@ function App() {
               <Route path="/alltutors" element={<AllTutors />} />
               <Route path="/tutorprofile/:id" element={<TutorProfile />} />
               <Route path="/addoffer" element={<AddOffer />} />
+              <Route path="/availableoffers" element={<AvailableOffers />} />
+              <Route
+                path="/availableoffer/:id"
+                element={<AvailableOfferMatchedTutor />}
+              />
             </Route>
           </Routes>
         </ThemeProvider>

@@ -3,6 +3,7 @@ import { MaterialReactTable } from "material-react-table";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Box, Button, Typography } from "@mui/material";
 import Header from "../../components/Header";
+import { useDeleteAvailableOfferMutation } from "../../state/api";
 
 function HeaderCell({ column }) {
   return (
@@ -22,9 +23,23 @@ function HeaderCell({ column }) {
     </>
   );
 }
-const AllTutors = () => {
+const AvailableOffers = () => {
   const navigate = useNavigate();
   //data and fetching state
+
+  const [deleteOffer] = useDeleteAvailableOfferMutation();
+
+  const handleDeleteOffer = async (offerId) => {
+    // Accept offerId as an argument
+    try {
+      const response = await deleteOffer(offerId).unwrap();
+      alert(`Offer No. ${offerId} deleted successfully`);
+
+      window.location.reload();
+    } catch (err) {
+      console.error("Error deleting offer:", err);
+    }
+  };
   const [data, setData] = useState([]);
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -37,7 +52,7 @@ const AllTutors = () => {
   const [sorting, setSorting] = useState([]);
   const [pagination, setPagination] = useState({
     pageIndex: 0,
-    pageSize: 10,
+    pageSize: 5,
   });
 
   //if you want to avoid useEffect, look at the React Query example instead
@@ -50,7 +65,7 @@ const AllTutors = () => {
         setIsRefetching(true);
       }
 
-      const url = new URL("/tutor/getAllTutors", "http://localhost:8080");
+      const url = new URL("/offer/getAvailableOffers", "http://localhost:8080");
       url.searchParams.set(
         "start",
         `${pagination.pageIndex * pagination.pageSize}`
@@ -113,18 +128,33 @@ const AllTutors = () => {
         },
       },
       {
-        accessorKey: "name",
-        header: "Name",
+        accessorKey: "guardianName",
+        header: "Guardian's Name",
         Header: ({ column }) => <HeaderCell column={column} />,
       },
       {
-        accessorKey: "phoneNumber",
-        header: "Phone Number",
+        accessorKey: "guardianPhoneNumber",
+        header: "Guardian's Phone Number",
         Header: ({ column }) => <HeaderCell column={column} />,
       },
       {
-        accessorKey: "educationBoard",
-        header: "Education Board",
+        accessorKey: "location",
+        header: "Location",
+        Header: ({ column }) => <HeaderCell column={column} />,
+      },
+      {
+        accessorKey: "address",
+        header: "Address",
+        Header: ({ column }) => <HeaderCell column={column} />,
+      },
+      {
+        accessorKey: "daysPerWeek",
+        header: "Days Per Week",
+        Header: ({ column }) => <HeaderCell column={column} />,
+      },
+      {
+        accessorKey: "salary",
+        header: "Salary",
         Header: ({ column }) => <HeaderCell column={column} />,
       },
       {
@@ -154,8 +184,8 @@ const AllTutors = () => {
         },
       },
       {
-        accessorKey: "preferredSubjects",
-        header: "Preferred Subjects",
+        accessorKey: "subjects",
+        header: "Subjects",
         Header: ({ column }) => <HeaderCell column={column} />,
         Cell: ({ cell }) => {
           // return <div onClick={() => ></div>,
@@ -177,8 +207,8 @@ const AllTutors = () => {
         },
       },
       {
-        accessorKey: "gender",
-        header: "Gender",
+        accessorKey: "tutorGender",
+        header: "Preferred Tutor's Gender",
         Header: ({ column }) => <HeaderCell column={column} />,
         muiTableBodyCellProps: ({ cell }) => ({
           sx: {
@@ -195,16 +225,15 @@ const AllTutors = () => {
   );
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="All Tutors" subtitle="Entire list of tutors" />
+      <Header
+        title="Available Offers"
+        subtitle="Entire list of available offers"
+      />
       <MaterialReactTable
         columns={columns}
         data={data}
         getRowId={(row) => row._id}
-        initialState={{
-          showColumnFilters: true,
-          // expanded: true,
-          // pagination: { pageIndex: 0, pageSize: 15 },
-        }}
+        initialState={{ showColumnFilters: true }}
         manualFiltering
         manualPagination
         manualSorting
@@ -226,7 +255,8 @@ const AllTutors = () => {
           <div
             style={{
               display: "flex",
-              flexWrap: "nowrap",
+              flexDirection: "column",
+              // flexWrap: "nowrap",
               gap: "0.5rem",
             }}
           >
@@ -235,10 +265,21 @@ const AllTutors = () => {
               color="primary"
               onClick={() => {
                 // console.info("View Profile", row.id);
-                navigate(`/tutorprofile/${row.id}`);
+                navigate(`/availableoffer/${row.id}`);
               }}
             >
-              View Profile
+              View Matched Tutors
+            </Button>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => {
+                // console.info("View Profile", row.id);
+                handleDeleteOffer(row.id);
+                // navigate(`/availableoffer/${row.id}`);
+              }}
+            >
+              Delete
             </Button>
             {/* <Button
             variant="contained"
@@ -278,4 +319,4 @@ const AllTutors = () => {
   );
 };
 
-export default AllTutors;
+export default AvailableOffers;
