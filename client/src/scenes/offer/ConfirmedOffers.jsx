@@ -4,6 +4,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
+  CircularProgress,
   Container,
   Dialog,
   DialogActions,
@@ -14,7 +15,11 @@ import {
   Typography,
 } from "@mui/material";
 import Header from "../../components/Header";
-import { useDeleteAvailableOfferMutation } from "../../state/api";
+import {
+  useDeleteAvailableOfferMutation,
+  useUpdateOfferMutation,
+} from "../../state/api";
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -36,15 +41,50 @@ function HeaderCell({ column }) {
     </>
   );
 }
-const AvailableOffers = () => {
-  const [open, setOpen] = useState(false);
+const ConfirmedOffers = () => {
+  // const [status, setStatus] = useState(""); // Update status
+  let status = useRef(null);
+  // const [assignedTutor, setAssignedTutor] = useState(""); // Update assignedTutor
+  let assignedTutor = useRef(null);
+
   let row_id = useRef(null);
+  const [mutate] = useUpdateOfferMutation();
+
+  const handleUpdateOffer = async (offerId) => {
+    // Replace 'offerId' with the actual offer ID
+    // await addTutor(data).unwrap();
+    try {
+      // console.log(status);
+      // console.log(assignedTutor);
+      await mutate({
+        id: offerId,
+        status: status.current,
+        assignedTutor: assignedTutor.current,
+      }).unwrap();
+      alert("The Offer is in Available Now!!!");
+      window.location.reload();
+    } catch (error) {
+      // console.log(error);
+      alert("Failed Load");
+    }
+  };
+  const [open, setOpen] = useState(false);
+
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
+  };
+  const [openOne, setOpenOne] = useState(false);
+
+  const handleClickOpenOne = () => {
+    setOpenOne(true);
+  };
+
+  const handleCloseOne = () => {
+    setOpenOne(false);
   };
   const navigate = useNavigate();
   //data and fetching state
@@ -81,13 +121,13 @@ const AvailableOffers = () => {
   useEffect(() => {
     console.log(columnFilters);
     const fetchData = async () => {
-      if (!data.length) {
+      if (!data?.length) {
         setIsLoading(true);
       } else {
         setIsRefetching(true);
       }
 
-      const url = new URL("/offer/getAvailableOffers", "http://localhost:8080");
+      const url = new URL("/offer/getConfirmedOffers", "http://localhost:8080");
       url.searchParams.set(
         "start",
         `${pagination.pageIndex * pagination.pageSize}`
@@ -127,7 +167,7 @@ const AvailableOffers = () => {
     () => [
       {
         accessorKey: "_id",
-        header: "ID",
+        header: "OFFER ID",
         Header: ({ column }) => <HeaderCell column={column} />,
         size: 180,
         Cell: ({ cell }) => {
@@ -150,6 +190,78 @@ const AvailableOffers = () => {
         },
       },
       {
+        accessorKey: "updatedAt",
+        header: "Start Time",
+        Header: ({ column }) => <HeaderCell column={column} />,
+        Cell: ({ cell }) => {
+          const updatedAt = new Date(cell.getValue());
+          const date = updatedAt.toLocaleDateString();
+          const time = updatedAt.toLocaleTimeString();
+          return (
+            <>
+              <Box
+                sx={{
+                  cursor: "pointer",
+                  // backgroundColor: "red",
+                }}
+                onClick={() => {
+                  console.log(cell.getValue());
+                }}
+              >
+                <Typography>{date}</Typography>
+                <Typography>{time}</Typography>
+              </Box>
+            </>
+          );
+        },
+      },
+      {
+        // accessorKey: "subjects",
+        header: "Time Taken To Confirm",
+        Header: ({ column }) => <HeaderCell column={column} />,
+        Cell: ({ cell, row }) => {
+          // return <div onClick={() => ></div>,
+          // console.info(row);
+          const updatedAt = new Date(row.original.updatedAt);
+          const createdAt = new Date(row.original.createdAt);
+
+          console.log({ updatedAt });
+          console.log({ createdAt });
+
+          // Calculate the time difference in milliseconds
+          const timeDifferenceMs = updatedAt - createdAt;
+          console.log({ timeDifferenceMs });
+          // Function to format milliseconds to a human-readable format
+          function formatTimeDifference(milliseconds) {
+            const seconds = Math.floor((milliseconds / 1000) % 60);
+            const minutes = Math.floor((milliseconds / (1000 * 60)) % 60);
+            const hours = Math.floor((milliseconds / (1000 * 60 * 60)) % 24);
+            const days = Math.floor(milliseconds / (1000 * 60 * 60 * 24));
+
+            return `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
+          }
+
+          // Format the time difference
+          const formattedTimeDifference =
+            formatTimeDifference(timeDifferenceMs);
+          return (
+            <>
+              <Box
+                sx={{
+                  cursor: "pointer",
+                  // backgroundColor: "red",
+                }}
+                onClick={() => {
+                  console.log(cell.getValue());
+                }}
+              >
+                <Typography>{formattedTimeDifference}</Typography>
+              </Box>
+            </>
+          );
+        },
+      },
+      {
         accessorKey: "guardianName",
         header: "Guardian's Name",
         Header: ({ column }) => <HeaderCell column={column} />,
@@ -157,6 +269,22 @@ const AvailableOffers = () => {
       {
         accessorKey: "guardianPhoneNumber",
         header: "Guardian's Phone Number",
+        Header: ({ column }) => <HeaderCell column={column} />,
+      },
+      {
+        accessorKey: "assignedTutor._id",
+        header: "Tutor ID",
+        size: 180,
+        Header: ({ column }) => <HeaderCell column={column} />,
+      },
+      {
+        accessorKey: "assignedTutor.name",
+        header: "Tutor Name",
+        Header: ({ column }) => <HeaderCell column={column} />,
+      },
+      {
+        accessorKey: "assignedTutor.phoneNumber",
+        header: "Tutor Phone Number",
         Header: ({ column }) => <HeaderCell column={column} />,
       },
       {
@@ -179,32 +307,7 @@ const AvailableOffers = () => {
         header: "Salary",
         Header: ({ column }) => <HeaderCell column={column} />,
       },
-      {
-        accessorKey: "createdAt",
-        header: "Create Time",
-        Header: ({ column }) => <HeaderCell column={column} />,
-        Cell: ({ cell }) => {
-          const createdAtDate = new Date(cell.getValue());
-          const date = createdAtDate.toLocaleDateString();
-          const time = createdAtDate.toLocaleTimeString();
-          return (
-            <>
-              <Box
-                sx={{
-                  cursor: "pointer",
-                  // backgroundColor: "red",
-                }}
-                onClick={() => {
-                  console.log(cell.getValue());
-                }}
-              >
-                <Typography>{date}</Typography>
-                <Typography>{time}</Typography>
-              </Box>
-            </>
-          );
-        },
-      },
+
       {
         accessorKey: "subjects",
         header: "Subjects",
@@ -245,11 +348,25 @@ const AvailableOffers = () => {
     ],
     []
   );
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress color="secondary" />
+      </Box>
+    );
+  }
   return (
     <Box m="1.5rem 2.5rem">
       <Header
-        title="Available Offers"
-        // subtitle="Entire list of available offers"
+        title="Confirmed Offers"
+        subtitle="Entire list of confirmed offers"
       />
       <Container>
         <MaterialReactTable
@@ -287,22 +404,58 @@ const AvailableOffers = () => {
                 variant="contained"
                 color="primary"
                 onClick={() => {
-                  // console.info("View Profile", row.id);
-                  navigate(`/availableoffer/${row.id}`);
+                  // console.log(status);
+                  // console.log(assignedTutor);
+                  // console.log(row.id);
+                  row_id.current = row.id;
+                  handleClickOpenOne();
                 }}
               >
-                View Matched Tutors
+                Not Confirm
               </Button>
+              <Dialog
+                open={openOne}
+                TransitionComponent={Transition}
+                keepMounted
+                onClose={handleCloseOne}
+                aria-describedby="alert-dialog-slide-description"
+              >
+                <DialogTitle>
+                  {"Are you sure you want to not confirm this offer?"}
+                </DialogTitle>
+                <DialogActions>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleCloseOne}
+                  >
+                    No
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={() => {
+                      status.current = "available";
+                      assignedTutor.current = "";
+                      handleUpdateOffer(row_id.current);
+                    }}
+                  >
+                    Yes
+                  </Button>
+                </DialogActions>
+              </Dialog>
               <Button
                 variant="contained"
                 color="error"
                 onClick={() => {
                   // console.info(row);
-                  row_id.current = row.id;
-                  handleClickOpen();
+                  // console.log(row.original.assignedTutor._id);
+                  status.current = "confirmed";
+                  assignedTutor.current = row.original.assignedTutor._id;
+                  // handleClickOpen()
                 }}
               >
-                Delete
+                Confirm
               </Button>
               <Dialog
                 open={open}
@@ -312,7 +465,7 @@ const AvailableOffers = () => {
                 aria-describedby="alert-dialog-slide-description"
               >
                 <DialogTitle>
-                  {"Are you sure you want to delete this offer?"}
+                  {"Are you sure you want to cornfirm this offer?"}
                 </DialogTitle>
                 <DialogActions>
                   <Button
@@ -325,15 +478,11 @@ const AvailableOffers = () => {
                   <Button
                     variant="contained"
                     color="error"
-                    onClick={(row) => {
-                      console.info(row);
-                      // console.info("View Profile", row.id);
-                      // console.log(row_id.current);
-                      handleDeleteOffer(row_id.current);
-                      // navigate(`/availableoffer/${row.id}`);
+                    onClick={() => {
+                      handleUpdateOffer(row_id.current);
                     }}
                   >
-                    Delete
+                    Confirm
                   </Button>
                 </DialogActions>
               </Dialog>
@@ -376,4 +525,4 @@ const AvailableOffers = () => {
   );
 };
 
-export default AvailableOffers;
+export default ConfirmedOffers;

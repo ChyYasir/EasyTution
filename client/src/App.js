@@ -13,6 +13,8 @@ import TutorProfile from "./scenes/tutor/TutorProfile";
 import AddOffer from "./scenes/offer/AddOffer";
 import AvailableOffers from "./scenes/offer/AvailableOffers";
 import AvailableOfferMatchedTutor from "./scenes/offer/AvailableOfferMatchedTutor";
+import PendingOffers from "./scenes/offer/PendingOffers";
+import ConfirmedOffers from "./scenes/offer/ConfirmedOffers";
 
 function App() {
   const mode = useSelector((state) => state.global.mode);
@@ -35,6 +37,8 @@ function App() {
                 path="/availableoffer/:id"
                 element={<AvailableOfferMatchedTutor />}
               />
+              <Route path="/pendingoffers" element={<PendingOffers />} />
+              <Route path="/confirmedoffers" element={<ConfirmedOffers />} />
             </Route>
           </Routes>
         </ThemeProvider>

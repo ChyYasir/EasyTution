@@ -47,7 +47,7 @@ export const getAvailableOffers = async (req, res) => {
     filters = JSON.parse(decodedFilterParam);
 
     // Define your data retrieval logic using Mongoose (e.g., querying the Tutor collection)
-    let dbData = await Offer.find().exec();
+    let dbData = await Offer.find({ status: "available" }).exec();
     // Apply filters
     if (filters) {
       let parsedColumnFilters = filters;
@@ -60,6 +60,168 @@ export const getAvailableOffers = async (req, res) => {
               .toLowerCase()
               .includes(filterValue.toLowerCase())
           );
+        });
+      }
+    }
+
+    // Apply global filter
+    if (globalFilter) {
+      dbData = dbData.filter((row) =>
+        Object.keys(row).some((columnId) =>
+          row[columnId]
+            .toString()
+            .toLowerCase()
+            .includes(globalFilter.toLowerCase())
+        )
+      );
+    }
+
+    // Apply sorting
+    if (sorting) {
+      const parsedSorting = JSON.parse(sorting);
+      if (parsedSorting && parsedSorting.length) {
+        const sort = parsedSorting[0];
+        const { id, desc } = sort;
+        dbData.sort((a, b) => {
+          if (desc) {
+            return a[id] < b[id] ? 1 : -1;
+          }
+          return a[id] > b[id] ? 1 : -1;
+        });
+      }
+    }
+
+    // // Send the paginated data and total row count as a response
+    const totalRowCount = dbData.length;
+    const data = dbData.slice(start, start + size);
+
+    res.status(200).json({ data, meta: { totalRowCount } });
+  } catch (error) {
+    console.error({ error: error.message });
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+export const getPendingOffers = async (req, res) => {
+  try {
+    let { start, size, filters, sorting, globalFilter } = req.query;
+
+    let decodedFilterParam = decodeURIComponent(filters);
+    filters = JSON.parse(decodedFilterParam);
+    console.log({ filters });
+    // Define your data retrieval logic using Mongoose (e.g., querying the Tutor collection)
+    let dbData = await Offer.find({ status: "pending" }).populate(
+      "assignedTutor"
+    );
+    // console.log(dbData);
+    // dbData.map((e) => {
+    //   console.log(e.assignedTutor);
+    // });
+    // console.log(JSON.parse(dbData.assignedTutor));
+    // Apply filters
+    if (filters) {
+      let parsedColumnFilters = filters;
+      if (parsedColumnFilters && parsedColumnFilters.length) {
+        parsedColumnFilters.forEach((filter) => {
+          const { id: columnId, value: filterValue } = filter;
+          console.log({ columnId });
+          dbData = dbData.filter((row) => {
+            if (columnId.includes("assignedTutor")) {
+              // console.log("Tutor");
+
+              return row?.assignedTutor[columnId.split(".")[1]]
+                .toString()
+                .toLowerCase()
+                .includes(filterValue.toLowerCase());
+            } else {
+              // console.log("guardian");
+              return row[columnId]
+                .toString()
+                .toLowerCase()
+                .includes(filterValue.toLowerCase());
+            }
+          });
+          console.log(dbData);
+        });
+      }
+    }
+
+    // Apply global filter
+    if (globalFilter) {
+      dbData = dbData.filter((row) =>
+        Object.keys(row).some((columnId) =>
+          row[columnId]
+            .toString()
+            .toLowerCase()
+            .includes(globalFilter.toLowerCase())
+        )
+      );
+    }
+
+    // Apply sorting
+    if (sorting) {
+      const parsedSorting = JSON.parse(sorting);
+      if (parsedSorting && parsedSorting.length) {
+        const sort = parsedSorting[0];
+        const { id, desc } = sort;
+        dbData.sort((a, b) => {
+          if (desc) {
+            return a[id] < b[id] ? 1 : -1;
+          }
+          return a[id] > b[id] ? 1 : -1;
+        });
+      }
+    }
+
+    // // Send the paginated data and total row count as a response
+    const totalRowCount = dbData.length;
+    const data = dbData.slice(start, start + size);
+
+    res.status(200).json({ data, meta: { totalRowCount } });
+  } catch (error) {
+    console.error({ error: error.message });
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+export const getConfirmedOffers = async (req, res) => {
+  try {
+    let { start, size, filters, sorting, globalFilter } = req.query;
+
+    let decodedFilterParam = decodeURIComponent(filters);
+    filters = JSON.parse(decodedFilterParam);
+    console.log({ filters });
+    // Define your data retrieval logic using Mongoose (e.g., querying the Tutor collection)
+    let dbData = await Offer.find({ status: "confirmed" }).populate(
+      "assignedTutor"
+    );
+    // console.log(dbData);
+    // dbData.map((e) => {
+    //   console.log(e.assignedTutor);
+    // });
+    // console.log(JSON.parse(dbData.assignedTutor));
+    // Apply filters
+    if (filters) {
+      let parsedColumnFilters = filters;
+      if (parsedColumnFilters && parsedColumnFilters.length) {
+        parsedColumnFilters.forEach((filter) => {
+          const { id: columnId, value: filterValue } = filter;
+          console.log({ columnId });
+          dbData = dbData.filter((row) => {
+            if (columnId.includes("assignedTutor")) {
+              // console.log("Tutor");
+
+              return row?.assignedTutor[columnId.split(".")[1]]
+                .toString()
+                .toLowerCase()
+                .includes(filterValue.toLowerCase());
+            } else {
+              // console.log("guardian");
+              return row[columnId]
+                .toString()
+                .toLowerCase()
+                .includes(filterValue.toLowerCase());
+            }
+          });
+          console.log(dbData);
         });
       }
     }
@@ -140,5 +302,61 @@ export const deleteAvailableOffer = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const updateOffer = async (req, res) => {
+  try {
+    const offerId = req.params.id;
+    const { status, assignedTutor } = req.body;
+
+    // Find the offer by ID
+
+    console.log(offerId);
+    const offer = await Offer.findById(offerId);
+
+    if (!offer) {
+      return res.status(404).json({ message: "Offer not found" });
+    }
+    console.log({ status });
+    console.log({ assignedTutor });
+    // Update the status and assigned tutor
+    if (status) {
+      offer.status = status;
+    }
+
+    offer.assignedTutor = assignedTutor;
+
+    console.log({ offer });
+    // Save the updated offer
+    await offer.save();
+
+    res.json({ message: "Offer updated successfully", offer });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const updateTutorContacted = async (req, res) => {
+  try {
+    const { offerId, tutorId } = req.params;
+
+    const updatedOffer = await Offer.findOneAndUpdate(
+      {
+        _id: offerId,
+        "matchedTutors.tutor": tutorId,
+      },
+      { $set: { "matchedTutors.$.contacted": true } },
+      { new: true }
+    );
+
+    if (!updatedOffer) {
+      return res.status(404).json({ message: "Offer or tutor not found" });
+    }
+
+    res.json(updatedOffer);
+  } catch (error) {
+    res.status(500).json({ message: "Error updating tutor contact", error });
   }
 };

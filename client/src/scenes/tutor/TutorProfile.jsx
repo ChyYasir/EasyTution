@@ -39,7 +39,7 @@ const Profile = () => {
     setHovered(false);
   };
 
-  const Profile = [
+  const ProfileInfo = [
     {
       label: "Tutor ID",
       content: `${data?._id}`,
@@ -194,7 +194,7 @@ const Profile = () => {
             <Box className="profile-content">
               {value === 0 && (
                 <Box>
-                  {Profile.map(({ label, content }) => {
+                  {ProfileInfo.map(({ label, content }) => {
                     return (
                       <Box>
                         <Grid

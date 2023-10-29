@@ -1,8 +1,21 @@
 import { useTheme } from "@emotion/react";
-import { Box, Button, Container, Paper, Typography } from "@mui/material";
-import React, { useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useGetAvailableOfferQuery } from "../../state/api";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Divider,
+  Grid,
+  Paper,
+  Typography,
+} from "@mui/material";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  useGetAvailableOfferQuery,
+  useUpdateMatchedTutorContactMutation,
+  useUpdateOfferMutation,
+} from "../../state/api";
 import MaterialReactTable from "material-react-table";
 
 function HeaderCell({ column }) {
@@ -24,6 +37,8 @@ function HeaderCell({ column }) {
   );
 }
 const AvailableOfferMatchedTutor = () => {
+  const navigate = useNavigate();
+
   //table state
   const [columnFilters, setColumnFilters] = useState([]);
   const [globalFilter, setGlobalFilter] = useState("");
@@ -34,12 +49,100 @@ const AvailableOfferMatchedTutor = () => {
   });
   const params = useParams();
 
-  console.log(params.id);
+  // console.log(params.id);
   const theme = useTheme();
 
   const { data, isLoading, isError } = useGetAvailableOfferQuery(params.id);
 
-  console.log(data?.matchedTutors);
+  // let [status, setStatus] = useState(""); // Update status
+  let status = useRef(null);
+  // let [assignedTutor, setAssignedTutor] = useState(""); // Update assignedTutor
+  let assignedTutor = useRef(null);
+
+  // let [offerId, setOfferId] = useState("");
+  const [mutate] = useUpdateOfferMutation();
+
+  const handleUpdateOffer = async (offerId) => {
+    // Replace 'offerId' with the actual offer ID
+    // await addTutor(data).unwrap();
+    try {
+      // console.log({ status: status.current });
+      await mutate({
+        id: offerId,
+        status: status.current,
+        assignedTutor: assignedTutor.current,
+      }).unwrap();
+      if (status.current === "pending") {
+        alert("The Offer is Pending Successfully!!!");
+      }
+    } catch (error) {
+      // console.log(error);
+      alert("Failed Load");
+    }
+  };
+
+  const fetchedTutors =
+    data?.matchedTutors.filter((tutor) => tutor.contacted) || [];
+
+  let contactedTutors = useRef();
+  // const [contactedTutors, setContactedTutors] = useState(
+  //
+  // );
+  contactedTutors.current = fetchedTutors.map((tutor) => tutor.tutor._id) || [];
+
+  console.log({ fetchedTutors });
+  console.log({ contactedTutors });
+  const [updateTutorContact] = useUpdateMatchedTutorContactMutation();
+
+  const handleUpdateContact = async (offerId, tutorId) => {
+    await updateTutorContact({ offerId, tutorId }).unwrap();
+    const updatedContactedTutors = [...contactedTutors.current, tutorId];
+    contactedTutors.current = updatedContactedTutors;
+  };
+  const offerInfoLeft = [
+    {
+      label: "Offer ID",
+      content: `${data?._id}`,
+    },
+    {
+      label: "Guardian's Name",
+      content: `${data?.guardianName}`,
+    },
+    {
+      label: "Guardian's Phone Number",
+      content: `${data?.guardianPhoneNumber}`,
+    },
+    {
+      label: "Location",
+      content: `${data?.location}`,
+    },
+    {
+      label: "Address",
+      content: `${data?.address}`,
+    },
+  ];
+  const offerInfoRight = [
+    {
+      label: "Education Board",
+      content: `${data?.educationBoard}`,
+    },
+    {
+      label: "Class",
+      content: `${data?.class}`,
+    },
+    {
+      label: "Subjects",
+      content: `${data?.subjects}`,
+    },
+    {
+      label: "Days Per Week",
+      content: `${data?.daysPerWeek}`,
+    },
+    {
+      label: "Address",
+      content: `${data?.address}`,
+    },
+  ];
   const columns = useMemo(
     () => [
       {
@@ -148,8 +251,36 @@ const AvailableOfferMatchedTutor = () => {
     []
   );
   if (isLoading) {
-    return <div> Loading...</div>;
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress color="secondary" />
+      </Box>
+    );
   }
+  if (data?.status !== "available") {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Typography variant="h1">
+          This Offer is not in the Available Offer list
+        </Typography>
+      </Box>
+    );
+  }
+
   return (
     <>
       <Box m="1.5rem 2.5rem">
@@ -163,7 +294,54 @@ const AvailableOfferMatchedTutor = () => {
             background: theme.palette.background.alt,
           }}
         >
-          <div>Yasir</div>
+          <Box>
+            <Box>
+              <Grid container spacing={2} sx={{ marginBottom: "0.5rem" }}>
+                <Grid item xs={6}>
+                  {offerInfoLeft.map(({ label, content }) => {
+                    return (
+                      <Grid
+                        container
+                        spacing={2}
+                        sx={{ marginBottom: "0.5rem" }}
+                      >
+                        <Grid item xs={6}>
+                          <Typography variant="h6" style={{ fontWeight: 600 }}>
+                            {label}
+                          </Typography>
+                        </Grid>
+
+                        <Grid item xs={6}>
+                          <Typography variant="h6">{content}</Typography>
+                        </Grid>
+                      </Grid>
+                    );
+                  })}
+                </Grid>
+                <Grid item xs={6}>
+                  {offerInfoRight.map(({ label, content }) => {
+                    return (
+                      <Grid
+                        container
+                        spacing={2}
+                        sx={{ marginBottom: "0.5rem" }}
+                      >
+                        <Grid item xs={6}>
+                          <Typography variant="h6" style={{ fontWeight: 600 }}>
+                            {label}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <Typography variant="h6">{content}</Typography>
+                        </Grid>
+                        <Divider />
+                      </Grid>
+                    );
+                  })}
+                </Grid>
+              </Grid>
+            </Box>
+          </Box>
         </Paper>
         <MaterialReactTable
           columns={columns}
@@ -199,14 +377,10 @@ const AvailableOfferMatchedTutor = () => {
                 gap: "0.5rem",
               }}
             >
-              {row.contacted ? (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  //   onClick={toggleContacted}
-                >
-                  Not Contacted
-                </Button>
+              {contactedTutors.current.includes(row.id) ? (
+                <Box>
+                  <Typography>This Tutor is already contacted</Typography>
+                </Box>
               ) : (
                 <div
                   style={{
@@ -220,11 +394,32 @@ const AvailableOfferMatchedTutor = () => {
                   <Button
                     variant="contained"
                     color="error"
-                    //   onClick={toggleContacted}
+                    onClick={() => {
+                      console.info(row);
+                      handleUpdateContact(params.id, row.id);
+                    }}
                   >
                     Not Assign
                   </Button>
-                  <Button variant="contained" color="secondary">
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => {
+                      // alert("random");
+                      // setStatus("pending");
+                      status.current = "pending";
+                      // setAssignedTutor(row.id);
+                      assignedTutor.current = row.id;
+                      // setOfferId(data?._id);
+
+                      // console.log({ status });
+                      // console.log({ assignedTutor });
+
+                      handleUpdateOffer(data?._id);
+
+                      navigate(`/pendingoffers`);
+                    }}
+                  >
                     Assign
                   </Button>
                 </div>

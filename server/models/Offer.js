@@ -36,6 +36,14 @@ const offerSchema = new mongoose.Schema(
         },
       },
     ],
+    status: {
+      type: String,
+      default: "available", // Default value is "available"
+    },
+    assignedTutor: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Tutor",
+    },
   },
   { timestamps: true }
 );

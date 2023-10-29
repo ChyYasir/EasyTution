@@ -38,6 +38,19 @@ export const api = createApi({
         method: "DELETE",
       }),
     }),
+    updateOffer: builder.mutation({
+      query: ({ id, status, assignedTutor }) => ({
+        url: `offer/update/${id}`,
+        method: "PUT", // or 'PATCH' based on your API
+        body: { status, assignedTutor },
+      }),
+    }),
+    updateMatchedTutorContact: builder.mutation({
+      query: ({ offerId, tutorId }) => ({
+        url: `/offer/${offerId}/matchedTutors/${tutorId}/contact`,
+        method: "PUT",
+      }),
+    }),
   }),
 });
 
@@ -48,4 +61,6 @@ export const {
   useAddOfferMutation,
   useGetAvailableOfferQuery,
   useDeleteAvailableOfferMutation,
+  useUpdateOfferMutation,
+  useUpdateMatchedTutorContactMutation,
 } = api;

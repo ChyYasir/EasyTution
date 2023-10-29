@@ -14,7 +14,11 @@ import {
   Typography,
 } from "@mui/material";
 import Header from "../../components/Header";
-import { useDeleteAvailableOfferMutation } from "../../state/api";
+import {
+  useDeleteAvailableOfferMutation,
+  useUpdateOfferMutation,
+} from "../../state/api";
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -36,15 +40,55 @@ function HeaderCell({ column }) {
     </>
   );
 }
-const AvailableOffers = () => {
-  const [open, setOpen] = useState(false);
+const PendingOffers = () => {
+  // const [status, setStatus] = useState(""); // Update status
+  let status = useRef(null);
+  // const [assignedTutor, setAssignedTutor] = useState(""); // Update assignedTutor
+  let assignedTutor = useRef(null);
+
   let row_id = useRef(null);
+  const [mutate] = useUpdateOfferMutation();
+
+  const handleUpdateOffer = async (offerId) => {
+    // Replace 'offerId' with the actual offer ID
+    // await addTutor(data).unwrap();
+    try {
+      // console.log(status);
+      // console.log(assignedTutor);
+      await mutate({
+        id: offerId,
+        status: status.current,
+        assignedTutor: assignedTutor.current,
+      }).unwrap();
+      if (status.current === "available") {
+        alert("The Offer is in Available List Now!!!");
+      }
+      if (status.current === "confirmed") {
+        alert(`Offer ${offerId} is confirmed`);
+      }
+      window.location.reload();
+    } catch (error) {
+      // console.log(error);
+      alert("Failed Load");
+    }
+  };
+  const [open, setOpen] = useState(false);
+
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
+  };
+  const [openOne, setOpenOne] = useState(false);
+
+  const handleClickOpenOne = () => {
+    setOpenOne(true);
+  };
+
+  const handleCloseOne = () => {
+    setOpenOne(false);
   };
   const navigate = useNavigate();
   //data and fetching state
@@ -81,13 +125,13 @@ const AvailableOffers = () => {
   useEffect(() => {
     console.log(columnFilters);
     const fetchData = async () => {
-      if (!data.length) {
+      if (!data?.length) {
         setIsLoading(true);
       } else {
         setIsRefetching(true);
       }
 
-      const url = new URL("/offer/getAvailableOffers", "http://localhost:8080");
+      const url = new URL("/offer/getPendingOffers", "http://localhost:8080");
       url.searchParams.set(
         "start",
         `${pagination.pageIndex * pagination.pageSize}`
@@ -127,7 +171,7 @@ const AvailableOffers = () => {
     () => [
       {
         accessorKey: "_id",
-        header: "ID",
+        header: "OFFER ID",
         Header: ({ column }) => <HeaderCell column={column} />,
         size: 180,
         Cell: ({ cell }) => {
@@ -157,6 +201,22 @@ const AvailableOffers = () => {
       {
         accessorKey: "guardianPhoneNumber",
         header: "Guardian's Phone Number",
+        Header: ({ column }) => <HeaderCell column={column} />,
+      },
+      {
+        accessorKey: "assignedTutor._id",
+        header: "Tutor ID",
+        size: 180,
+        Header: ({ column }) => <HeaderCell column={column} />,
+      },
+      {
+        accessorKey: "assignedTutor.name",
+        header: "Tutor Name",
+        Header: ({ column }) => <HeaderCell column={column} />,
+      },
+      {
+        accessorKey: "assignedTutor.phoneNumber",
+        header: "Tutor Phone Number",
         Header: ({ column }) => <HeaderCell column={column} />,
       },
       {
@@ -248,8 +308,8 @@ const AvailableOffers = () => {
   return (
     <Box m="1.5rem 2.5rem">
       <Header
-        title="Available Offers"
-        // subtitle="Entire list of available offers"
+        title="Pending Offers"
+        subtitle="Entire list of available offers"
       />
       <Container>
         <MaterialReactTable
@@ -287,22 +347,59 @@ const AvailableOffers = () => {
                 variant="contained"
                 color="primary"
                 onClick={() => {
-                  // console.info("View Profile", row.id);
-                  navigate(`/availableoffer/${row.id}`);
+                  // console.log(status);
+                  // console.log(assignedTutor);
+                  // console.log(row.id);
+                  row_id.current = row.id;
+                  handleClickOpenOne();
                 }}
               >
-                View Matched Tutors
+                Not Confirm
               </Button>
+              <Dialog
+                open={openOne}
+                TransitionComponent={Transition}
+                keepMounted
+                onClose={handleCloseOne}
+                aria-describedby="alert-dialog-slide-description"
+              >
+                <DialogTitle>
+                  {"Are you sure you want to not confirm this offer?"}
+                </DialogTitle>
+                <DialogActions>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleCloseOne}
+                  >
+                    No
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={() => {
+                      status.current = "available";
+                      assignedTutor.current = null;
+                      handleUpdateOffer(row_id.current);
+                    }}
+                  >
+                    Yes
+                  </Button>
+                </DialogActions>
+              </Dialog>
               <Button
                 variant="contained"
                 color="error"
                 onClick={() => {
                   // console.info(row);
+                  // console.log(row.original.assignedTutor._id);
+                  status.current = "confirmed";
+                  assignedTutor.current = row.original.assignedTutor._id;
                   row_id.current = row.id;
                   handleClickOpen();
                 }}
               >
-                Delete
+                Confirm
               </Button>
               <Dialog
                 open={open}
@@ -312,7 +409,7 @@ const AvailableOffers = () => {
                 aria-describedby="alert-dialog-slide-description"
               >
                 <DialogTitle>
-                  {"Are you sure you want to delete this offer?"}
+                  {"Are you sure you want to cornfirm this offer?"}
                 </DialogTitle>
                 <DialogActions>
                   <Button
@@ -325,15 +422,15 @@ const AvailableOffers = () => {
                   <Button
                     variant="contained"
                     color="error"
-                    onClick={(row) => {
-                      console.info(row);
-                      // console.info("View Profile", row.id);
+                    onClick={() => {
+                      // console.log(status.current);
+                      // console.log(assignedTutor.current);
                       // console.log(row_id.current);
-                      handleDeleteOffer(row_id.current);
-                      // navigate(`/availableoffer/${row.id}`);
+
+                      handleUpdateOffer(row_id.current);
                     }}
                   >
-                    Delete
+                    Confirm
                   </Button>
                 </DialogActions>
               </Dialog>
@@ -376,4 +473,4 @@ const AvailableOffers = () => {
   );
 };
 
-export default AvailableOffers;
+export default PendingOffers;
