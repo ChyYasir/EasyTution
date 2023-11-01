@@ -1,10 +1,43 @@
+import Offer from "../models/Offer.js";
 import Tutor from "../models/Tutor.js";
 
 export const addTutor = async (req, res) => {
   try {
     const newTutor = new Tutor(req.body);
-    console.log(newTutor);
     await newTutor.save();
+
+    // Find offers that match the tutor's criteria
+    const matchingOffers = await Offer.find({
+      $and: [
+        // Location matching
+        { location: { $in: newTutor.preferredLocations } },
+
+        // Subjects matching
+        { subjects: { $in: newTutor.preferredSubjects } },
+
+        // Education board matching
+        { educationBoard: newTutor.educationBoard },
+
+        // Gender matching
+        { tutorGender: newTutor.gender },
+
+        // Class condition
+        { class: { $lte: newTutor.upToClass } },
+      ],
+    });
+
+    // Add the new tutor to the matchedTutors array of each matching offer
+    const updatePromises = matchingOffers.map(async (offer) => {
+      offer.matchedTutors.push({
+        tutor: newTutor._id,
+        contacted: false, // Set to true if contacted
+      });
+      await offer.save();
+    });
+
+    // Wait for all updates to complete
+    await Promise.all(updatePromises);
+
     res.status(201).json({ message: "Tutor added successfully" });
   } catch (error) {
     console.error(error);
@@ -84,5 +117,30 @@ export const getTutor = async (req, res) => {
   } catch (error) {
     console.error({ error: error.message });
     res.status(404).json({ message: error.message });
+  }
+};
+export const updateTutor = async (req, res) => {
+  try {
+    const tutorId = req.params.id; // Get the tutor's ID from the request parameters
+    const updatedFields = req.body; // Get the fields to be updated from the request body
+
+    // Find the tutor by ID and update the specified fields using async/await
+    console.log({ updatedFields });
+    const updatedTutor = await Tutor.findByIdAndUpdate(
+      tutorId,
+      { $set: updatedFields },
+      { new: true }
+    );
+
+    if (!updatedTutor) {
+      console.error("Tutor not found");
+      res.status(404).json({ error: "Tutor not found" });
+      return;
+    }
+    // console.log({ updatedTutor });
+    res.status(200).json(updatedTutor);
+  } catch (err) {
+    console.error("Error updating tutor:", err);
+    res.status(500).json({ error: "Error updating tutor" });
   }
 };

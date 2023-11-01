@@ -44,6 +44,13 @@ const offerSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Tutor",
     },
+    startDate: {
+      type: Date, // Use Date type for timestamp
+    },
+    feeTaken: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

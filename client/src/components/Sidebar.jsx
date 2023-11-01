@@ -68,7 +68,7 @@ const navItems = [
   {
     text: "Add Tutor",
     url: "addtutor",
-    icon: <PointOfSaleOutlined />,
+    icon: <AddIcon />,
   },
   {
     text: "All Tutors",

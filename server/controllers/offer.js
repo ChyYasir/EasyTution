@@ -326,7 +326,9 @@ export const updateOffer = async (req, res) => {
     }
 
     offer.assignedTutor = assignedTutor;
-
+    if (status === "confirmed") {
+      offer.startDate = new Date();
+    }
     console.log({ offer });
     // Save the updated offer
     await offer.save();

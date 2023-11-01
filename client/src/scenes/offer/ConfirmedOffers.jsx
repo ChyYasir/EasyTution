@@ -190,13 +190,13 @@ const ConfirmedOffers = () => {
         },
       },
       {
-        accessorKey: "updatedAt",
+        accessorKey: "startDate",
         header: "Start Time",
         Header: ({ column }) => <HeaderCell column={column} />,
         Cell: ({ cell }) => {
-          const updatedAt = new Date(cell.getValue());
-          const date = updatedAt.toLocaleDateString();
-          const time = updatedAt.toLocaleTimeString();
+          const startTime = new Date(cell.getValue());
+          const date = startTime.toLocaleDateString();
+          const time = startTime.toLocaleTimeString();
           return (
             <>
               <Box
@@ -222,15 +222,15 @@ const ConfirmedOffers = () => {
         Cell: ({ cell, row }) => {
           // return <div onClick={() => ></div>,
           // console.info(row);
-          const updatedAt = new Date(row.original.updatedAt);
+          const startedAt = new Date(row.original.startDate);
           const createdAt = new Date(row.original.createdAt);
 
-          console.log({ updatedAt });
-          console.log({ createdAt });
+          // console.log({ updatedAt });
+          // console.log({ createdAt });
 
           // Calculate the time difference in milliseconds
-          const timeDifferenceMs = updatedAt - createdAt;
-          console.log({ timeDifferenceMs });
+          const timeDifferenceMs = startedAt - createdAt;
+          // console.log({ timeDifferenceMs });
           // Function to format milliseconds to a human-readable format
           function formatTimeDifference(milliseconds) {
             const seconds = Math.floor((milliseconds / 1000) % 60);
@@ -391,112 +391,107 @@ const ConfirmedOffers = () => {
           onSortingChange={setSorting}
           rowCount={rowCount}
           enableRowActions
-          renderRowActions={({ row }) => (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                // flexWrap: "nowrap",
-                gap: "0.5rem",
-              }}
-            >
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  // console.log(status);
-                  // console.log(assignedTutor);
-                  // console.log(row.id);
-                  row_id.current = row.id;
-                  handleClickOpenOne();
-                }}
-              >
-                Not Confirm
-              </Button>
-              <Dialog
-                open={openOne}
-                TransitionComponent={Transition}
-                keepMounted
-                onClose={handleCloseOne}
-                aria-describedby="alert-dialog-slide-description"
-              >
-                <DialogTitle>
-                  {"Are you sure you want to not confirm this offer?"}
-                </DialogTitle>
-                <DialogActions>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleCloseOne}
-                  >
-                    No
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="error"
-                    onClick={() => {
-                      status.current = "available";
-                      assignedTutor.current = "";
-                      handleUpdateOffer(row_id.current);
-                    }}
-                  >
-                    Yes
-                  </Button>
-                </DialogActions>
-              </Dialog>
-              <Button
-                variant="contained"
-                color="error"
-                onClick={() => {
-                  // console.info(row);
-                  // console.log(row.original.assignedTutor._id);
-                  status.current = "confirmed";
-                  assignedTutor.current = row.original.assignedTutor._id;
-                  // handleClickOpen()
-                }}
-              >
-                Confirm
-              </Button>
-              <Dialog
-                open={open}
-                TransitionComponent={Transition}
-                keepMounted
-                onClose={handleClose}
-                aria-describedby="alert-dialog-slide-description"
-              >
-                <DialogTitle>
-                  {"Are you sure you want to cornfirm this offer?"}
-                </DialogTitle>
-                <DialogActions>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleClose}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="error"
-                    onClick={() => {
-                      handleUpdateOffer(row_id.current);
-                    }}
-                  >
-                    Confirm
-                  </Button>
-                </DialogActions>
-              </Dialog>
-              {/* <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              console.info("Remove", row);
-            }}
-          >
-            Remove
-          </Button> */}
-            </div>
-          )}
+          renderRowActions={({ row }) => {
+            // const updatedAt = new Date(row.original.updatedAt); // Your updatedAt timestamp
+            const startTime = new Date(row.original.startDate);
+            // Get the current time as a Date object
+            const currentTime = new Date();
+
+            // const endTime = updatedAt.getDate() + 30;
+
+            // // endTime.setDate();
+            // console.log({ endTime });
+            // Calculate the time difference in milliseconds
+            const timeDifferenceMs = currentTime - startTime;
+            const timeToEnd = 30 * 24 * 60 * 60 * 1000 - timeDifferenceMs;
+            // Check if the time difference is greater than 30 days (30 days = 30 * 24 * 60 * 60 * 1000 milliseconds)
+            let isTimeDifferenceMoreThan30Days =
+              timeDifferenceMs > 1 * 24 * 60 * 60 * 1000;
+            // isTimeDifferenceMoreThan30Days = true;
+            function formatTimeDifference(milliseconds) {
+              const seconds = Math.floor((milliseconds / 1000) % 60);
+              const minutes = Math.floor((milliseconds / (1000 * 60)) % 60);
+              const hours = Math.floor((milliseconds / (1000 * 60 * 60)) % 24);
+              const days = Math.floor(milliseconds / (1000 * 60 * 60 * 24));
+
+              return `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
+            }
+            console.log({ timeToEnd });
+            const timeRemaining = formatTimeDifference(timeToEnd);
+            return (
+              <>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    // flexWrap: "nowrap",
+                    gap: "0.5rem",
+                  }}
+                >
+                  {isTimeDifferenceMoreThan30Days ? (
+                    <Box>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "0.5rem",
+                        }}
+                      >
+                        <Button
+                          variant="contained"
+                          color="error"
+                          onClick={() => {
+                            // console.info(row);
+                            // console.log(row.original.assignedTutor._id);
+                            status.current = "confirmed";
+                            assignedTutor.current =
+                              row.original.assignedTutor._id;
+                            handleClickOpen();
+                          }}
+                        >
+                          Take Fee
+                        </Button>
+                        <Dialog
+                          open={open}
+                          TransitionComponent={Transition}
+                          keepMounted
+                          onClose={handleClose}
+                          aria-describedby="alert-dialog-slide-description"
+                        >
+                          <DialogTitle>
+                            {"Are you sure you have already taken this fee?"}
+                          </DialogTitle>
+                          <DialogActions>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={handleClose}
+                            >
+                              No
+                            </Button>
+                            <Button
+                              variant="contained"
+                              color="error"
+                              onClick={() => {
+                                handleUpdateOffer(row_id.current);
+                              }}
+                            >
+                              Yes
+                            </Button>
+                          </DialogActions>
+                        </Dialog>
+                      </div>
+                    </Box>
+                  ) : (
+                    <Box>
+                      <Typography> {timeRemaining}</Typography>
+                      <Typography>Remaining</Typography>
+                    </Box>
+                  )}
+                </div>
+              </>
+            );
+          }}
           defaultColumn={{
             maxSize: 400,
             minSize: 80,

@@ -170,6 +170,11 @@ const AvailableOffers = () => {
         Header: ({ column }) => <HeaderCell column={column} />,
       },
       {
+        accessorKey: "educationBoard",
+        header: "Education Board",
+        Header: ({ column }) => <HeaderCell column={column} />,
+      },
+      {
         accessorKey: "daysPerWeek",
         header: "Days Per Week",
         Header: ({ column }) => <HeaderCell column={column} />,

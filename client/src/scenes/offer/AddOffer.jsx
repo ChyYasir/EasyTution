@@ -12,6 +12,7 @@ import {
   TextField,
 } from "@mui/material";
 import Header from "../../components/Header";
+import { validatePhoneNumber } from "../../components/validation";
 
 const AddOffer = () => {
   const theme = useTheme();
@@ -65,15 +66,17 @@ const AddOffer = () => {
                     name="guardianName"
                     control={control}
                     defaultValue=""
-                    rules={{ required: "Name is required" }}
+                    rules={{ required: " Guardian name is required" }}
                     render={({ field }) => (
                       <TextField
                         {...field}
                         label="Guardian Name"
                         variant="outlined"
                         fullWidth
-                        error={!!errors.name}
-                        helperText={errors.name ? errors.name.message : ""}
+                        error={!!errors.guardianName}
+                        helperText={
+                          errors.guardianName ? errors.guardianName.message : ""
+                        }
                       />
                     )}
                   />
@@ -83,16 +86,21 @@ const AddOffer = () => {
                     name="guardianPhoneNumber"
                     control={control}
                     defaultValue=""
-                    rules={{ required: "Phone Number is required" }}
+                    rules={{
+                      required: " Guardian's Phone Number is required",
+                      validate: validatePhoneNumber,
+                    }}
                     render={({ field }) => (
                       <TextField
                         {...field}
                         label="Guardian's Phone Number"
                         variant="outlined"
                         fullWidth
-                        error={!!errors.phoneNumber}
+                        error={!!errors.guardianPhoneNumber}
                         helperText={
-                          errors.phoneNumber ? errors.phoneNumber.message : ""
+                          errors.guardianPhoneNumber
+                            ? errors.guardianPhoneNumber.message
+                            : ""
                         }
                       />
                     )}
@@ -215,8 +223,10 @@ const AddOffer = () => {
                     label="Days Per Week"
                     variant="outlined"
                     fullWidth
-                    error={!!errors.class}
-                    helperText={errors.class ? errors.class.message : ""}
+                    error={!!errors.daysPerWeek}
+                    helperText={
+                      errors.daysPerWeek ? errors.daysPerWeek.message : ""
+                    }
                   />
                 )}
               />

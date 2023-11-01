@@ -27,6 +27,7 @@ import Header from "../../components/Header";
 import { useDispatch } from "react-redux";
 import { CheckBox } from "@mui/icons-material";
 import { useTheme } from "@emotion/react";
+import { validatePhoneNumber } from "../../components/validation";
 const AddTutor = () => {
   const theme = useTheme();
 
@@ -40,11 +41,11 @@ const AddTutor = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const dispatch = useDispatch();
   const [addTutor] = useAddTutorMutation();
-  const onSubmit = async (data) => {
+  const onSubmit = async (formData) => {
     setIsSubmitting(true);
-    console.log(data);
+    console.log(formData);
     try {
-      await addTutor(data).unwrap();
+      await addTutor(formData).unwrap();
       alert("Tutor Added Successfully!!!");
       reset();
     } catch (error) {
@@ -95,7 +96,10 @@ const AddTutor = () => {
                 name="phoneNumber"
                 control={control}
                 defaultValue=""
-                rules={{ required: "Phone Number is required" }}
+                rules={{
+                  required: "Phone Number is required",
+                  validate: validatePhoneNumber,
+                }}
                 render={({ field }) => (
                   <TextField
                     {...field}
