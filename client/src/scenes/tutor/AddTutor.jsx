@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useAddTutorMutation } from "../../state/api";
+import { useAddTutorMutation, useGetAllSubjectsQuery } from "../../state/api";
 import {
   Alert,
   Autocomplete,
@@ -8,6 +8,7 @@ import {
   Button,
   Checkbox,
   Chip,
+  CircularProgress,
   Container,
   FormControl,
   FormControlLabel,
@@ -30,6 +31,7 @@ import { useTheme } from "@emotion/react";
 import { validatePhoneNumber } from "../../components/validation";
 const AddTutor = () => {
   const theme = useTheme();
+  const { data: allSubjects, isLoading } = useGetAllSubjectsQuery();
 
   const {
     handleSubmit,
@@ -55,8 +57,25 @@ const AddTutor = () => {
       setIsSubmitting(false);
     }
   };
-  const subjects = ["Physics", "Chemistry"];
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Typography variant="h2" color="secondary">
+          LOADING
+        </Typography>
+        <CircularProgress color="secondary" />
+      </Box>
+    );
+  }
   const locations = ["Mohakhali", "Khilgaon"];
+  const subjects = allSubjects.map((subject) => subject.name);
   return (
     <>
       <Container component="main">

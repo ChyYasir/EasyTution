@@ -4,6 +4,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
+  CircularProgress,
   Container,
   Dialog,
   DialogActions,
@@ -250,6 +251,23 @@ const AvailableOffers = () => {
     ],
     []
   );
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Typography variant="h2" color="secondary">
+          LOADING
+        </Typography>
+        <CircularProgress color="secondary" />
+      </Box>
+    );
+  }
   return (
     <Box m="1.5rem 2.5rem">
       <Header

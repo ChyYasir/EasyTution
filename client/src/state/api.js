@@ -58,6 +58,22 @@ export const api = createApi({
         method: "PUT",
       }),
     }),
+    addSubject: builder.mutation({
+      query: (subject) => ({
+        url: "system/subject/add",
+        method: "POST",
+        body: subject,
+      }),
+    }),
+    getAllSubjects: builder.query({
+      query: () => "system/subject/getAll",
+    }),
+    deleteSubject: builder.mutation({
+      query: (id) => ({
+        url: `/system/subject/delete/${id}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
@@ -71,4 +87,7 @@ export const {
   useDeleteAvailableOfferMutation,
   useUpdateOfferMutation,
   useUpdateMatchedTutorContactMutation,
+  useAddSubjectMutation,
+  useGetAllSubjectsQuery,
+  useDeleteSubjectMutation,
 } = api;

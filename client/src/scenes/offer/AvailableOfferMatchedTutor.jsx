@@ -17,6 +17,7 @@ import {
   useUpdateOfferMutation,
 } from "../../state/api";
 import MaterialReactTable from "material-react-table";
+import Loading from "../../components/Loading";
 
 function HeaderCell({ column }) {
   return (

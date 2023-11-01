@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { MaterialReactTable } from "material-react-table";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import Header from "../../components/Header";
 
 function HeaderCell({ column }) {
@@ -193,6 +193,23 @@ const AllTutors = () => {
     ],
     []
   );
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Typography variant="h2" color="secondary">
+          LOADING
+        </Typography>
+        <CircularProgress color="secondary" />
+      </Box>
+    );
+  }
   return (
     <Box m="1.5rem 2.5rem">
       <Header title="All Tutors" subtitle="Entire list of tutors" />

@@ -15,6 +15,7 @@ import AvailableOffers from "./scenes/offer/AvailableOffers";
 import AvailableOfferMatchedTutor from "./scenes/offer/AvailableOfferMatchedTutor";
 import PendingOffers from "./scenes/offer/PendingOffers";
 import ConfirmedOffers from "./scenes/offer/ConfirmedOffers";
+import AllSubjects from "./scenes/system/AllSubjects";
 
 function App() {
   const mode = useSelector((state) => state.global.mode);
@@ -39,6 +40,7 @@ function App() {
               />
               <Route path="/pendingoffers" element={<PendingOffers />} />
               <Route path="/confirmedoffers" element={<ConfirmedOffers />} />
+              <Route path="/allsubjects" element={<AllSubjects />} />
             </Route>
           </Routes>
         </ThemeProvider>

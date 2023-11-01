@@ -76,12 +76,12 @@ const navItems = [
     icon: <TodayOutlined />,
   },
   {
-    text: "GUARDIAN MANAGEMENT",
+    text: "SYSTEM MANAGEMENT",
     icon: null,
   },
   {
-    text: "Add Guardian",
-    url: "addguardian",
+    text: "All Subjects",
+    url: "allsubjects",
     icon: <AdminPanelSettingsOutlined />,
   },
   {

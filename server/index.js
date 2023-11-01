@@ -7,6 +7,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import tutorRoutes from "./routes/tutor.js";
 import offerRoutes from "./routes/offer.js";
+import systemRoutes from "./routes/system.js";
 /*CONFIGURATION*/
 dotenv.config();
 const app = express();
@@ -21,6 +22,7 @@ app.use(cors());
 /* ROUTES */
 app.use("/tutor", tutorRoutes);
 app.use("/offer", offerRoutes);
+app.use("/system", systemRoutes);
 
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 9000;

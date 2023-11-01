@@ -18,6 +18,7 @@ import {
   DialogActions,
   MenuItem,
   Autocomplete,
+  CircularProgress,
 } from "@mui/material";
 import { PhotoCamera } from "@mui/icons-material";
 import { useTheme } from "@emotion/react";
@@ -356,182 +357,185 @@ const UpdateEducation = ({ tutor }) => {
             Update Education
           </Button>
           <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Update Education Info</DialogTitle>
-            <DialogContent>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <Grid container spacing={2} sx={{ marginTop: "1.5rem" }}>
-                  <Grid item xs={12}>
-                    <Controller
-                      name="oLevelSchool"
-                      control={control}
-                      defaultValue={tutor.oLevelSchool}
-                      render={({ field }) => (
-                        <TextField
-                          {...field}
-                          label="O Level School"
-                          variant="outlined"
-                          fullWidth
-                        />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Controller
-                      name="oLevelResult"
-                      control={control}
-                      defaultValue={tutor.oLevelResult}
-                      render={({ field }) => (
-                        <TextField
-                          {...field}
-                          label="O Level Result"
-                          variant="outlined"
-                          fullWidth
-                        />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Controller
-                      name="aLevelSchool"
-                      control={control}
-                      defaultValue={tutor.aLevelSchool}
-                      render={({ field }) => (
-                        <TextField
-                          {...field}
-                          label="A Level School"
-                          variant="outlined"
-                          fullWidth
-                        />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Controller
-                      name="aLevelResult"
-                      control={control}
-                      defaultValue={tutor.aLevelResult}
-                      render={({ field }) => (
-                        <TextField
-                          {...field}
-                          label="A Level Result"
-                          variant="outlined"
-                          fullWidth
-                        />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Controller
-                      name="universityName"
-                      control={control}
-                      defaultValue={tutor.universityName}
-                      render={({ field }) => (
-                        <TextField
-                          {...field}
-                          label="University Name"
-                          variant="outlined"
-                          fullWidth
-                        />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Controller
-                      name="department"
-                      control={control}
-                      defaultValue={tutor.department}
-                      render={({ field }) => (
-                        <TextField
-                          {...field}
-                          label="Department"
-                          variant="outlined"
-                          fullWidth
-                        />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Controller
-                      name="semester"
-                      control={control}
-                      defaultValue={tutor.semester}
-                      render={({ field }) => (
-                        <TextField
-                          {...field}
-                          label="Semester"
-                          variant="outlined"
-                          fullWidth
-                        />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Controller
-                      name="cgpa"
-                      control={control}
-                      defaultValue={tutor.cgpa}
-                      render={({ field }) => (
-                        <TextField
-                          {...field}
-                          label="CGPA"
-                          variant="outlined"
-                          fullWidth
-                        />
-                      )}
-                    />
+            <Box m="1rem 2rem">
+              <Header title={"Update Education Info"} />
+
+              <DialogContent>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <Grid container spacing={2} sx={{ marginTop: "1.5rem" }}>
+                    <Grid item xs={12}>
+                      <Controller
+                        name="oLevelSchool"
+                        control={control}
+                        defaultValue={tutor.oLevelSchool}
+                        render={({ field }) => (
+                          <TextField
+                            {...field}
+                            label="O Level School"
+                            variant="outlined"
+                            fullWidth
+                          />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Controller
+                        name="oLevelResult"
+                        control={control}
+                        defaultValue={tutor.oLevelResult}
+                        render={({ field }) => (
+                          <TextField
+                            {...field}
+                            label="O Level Result"
+                            variant="outlined"
+                            fullWidth
+                          />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Controller
+                        name="aLevelSchool"
+                        control={control}
+                        defaultValue={tutor.aLevelSchool}
+                        render={({ field }) => (
+                          <TextField
+                            {...field}
+                            label="A Level School"
+                            variant="outlined"
+                            fullWidth
+                          />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Controller
+                        name="aLevelResult"
+                        control={control}
+                        defaultValue={tutor.aLevelResult}
+                        render={({ field }) => (
+                          <TextField
+                            {...field}
+                            label="A Level Result"
+                            variant="outlined"
+                            fullWidth
+                          />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Controller
+                        name="universityName"
+                        control={control}
+                        defaultValue={tutor.universityName}
+                        render={({ field }) => (
+                          <TextField
+                            {...field}
+                            label="University Name"
+                            variant="outlined"
+                            fullWidth
+                          />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Controller
+                        name="department"
+                        control={control}
+                        defaultValue={tutor.department}
+                        render={({ field }) => (
+                          <TextField
+                            {...field}
+                            label="Department"
+                            variant="outlined"
+                            fullWidth
+                          />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Controller
+                        name="semester"
+                        control={control}
+                        defaultValue={tutor.semester}
+                        render={({ field }) => (
+                          <TextField
+                            {...field}
+                            label="Semester"
+                            variant="outlined"
+                            fullWidth
+                          />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Controller
+                        name="cgpa"
+                        control={control}
+                        defaultValue={tutor.cgpa}
+                        render={({ field }) => (
+                          <TextField
+                            {...field}
+                            label="CGPA"
+                            variant="outlined"
+                            fullWidth
+                          />
+                        )}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <Controller
+                        name="presentAddress"
+                        control={control}
+                        defaultValue={tutor.presentAddress}
+                        render={({ field }) => (
+                          <TextField
+                            {...field}
+                            label="Present Address"
+                            variant="outlined"
+                            fullWidth
+                          />
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Controller
+                        name="otherDetails"
+                        control={control}
+                        defaultValue={tutor.otherDetails}
+                        render={({ field }) => (
+                          <TextField
+                            {...field}
+                            label="Other Details"
+                            variant="outlined"
+                            fullWidth
+                          />
+                        )}
+                      />
+                    </Grid>
                   </Grid>
 
-                  <Grid item xs={12}>
-                    <Controller
-                      name="presentAddress"
-                      control={control}
-                      defaultValue={tutor.presentAddress}
-                      render={({ field }) => (
-                        <TextField
-                          {...field}
-                          label="Present Address"
-                          variant="outlined"
-                          fullWidth
-                        />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Controller
-                      name="otherDetails"
-                      control={control}
-                      defaultValue={tutor.otherDetails}
-                      render={({ field }) => (
-                        <TextField
-                          {...field}
-                          label="Other Details"
-                          variant="outlined"
-                          fullWidth
-                        />
-                      )}
-                    />
-                  </Grid>
-                </Grid>
-
-                <DialogActions sx={{ marginTop: "1rem" }}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleClose}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="error"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? "Updating..." : "Update Education Info"}
-                  </Button>
-                </DialogActions>
-              </form>
-            </DialogContent>
+                  <DialogActions sx={{ marginTop: "1rem" }}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleClose}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      color="error"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? "Updating..." : "Update Education Info"}
+                    </Button>
+                  </DialogActions>
+                </form>
+              </DialogContent>
+            </Box>
           </Dialog>
         </div>
       </Container>
@@ -636,7 +640,21 @@ const Profile = () => {
   ];
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Typography variant="h2" color="secondary">
+          LOADING
+        </Typography>
+        <CircularProgress color="secondary" />
+      </Box>
+    );
   }
   return (
     <Container>
