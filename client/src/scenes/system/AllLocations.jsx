@@ -23,19 +23,19 @@ import FolderIcon from "@mui/icons-material/Folder";
 
 import { AddCircleOutlined, Book } from "@mui/icons-material";
 import {
-  useAddSubjectMutation,
-  useDeleteSubjectMutation,
-  useGetAllSubjectsQuery,
+  useDeleteLocationMutation,
+  useGetAllLocationsQuery,
 } from "../../state/api";
 import Header from "../../components/Header";
 import { useTheme } from "@emotion/react";
 import { Controller, useForm } from "react-hook-form";
-import AddSubject from "./AddSubject";
+import AddLocation from "./AddLocation";
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const AllSubjects = () => {
+const AllLocations = () => {
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -46,20 +46,20 @@ const AllSubjects = () => {
     setOpen(false);
   };
   const theme = useTheme();
-  const { data: subjects, isLoading } = useGetAllSubjectsQuery();
-  console.log(subjects);
+  const { data: locations, isLoading } = useGetAllLocationsQuery();
+  console.log(locations);
 
-  const [deleteSubject] = useDeleteSubjectMutation();
+  const [deleteLocation] = useDeleteLocationMutation();
 
-  const handleDeleteSubject = async (subjectId) => {
+  const handleDeleteLocation = async (locationId) => {
     // Accept offerId as an argument
     try {
-      const response = await deleteSubject(subjectId).unwrap();
-      alert(`Subject deleted successfully`);
+      const response = await deleteLocation(locationId).unwrap();
+      alert(`location deleted successfully`);
 
       window.location.reload();
     } catch (err) {
-      console.error("Error deleting offer:", err);
+      console.error("Error deleting lcoation:", err);
     }
   };
   if (isLoading) {
@@ -76,17 +76,18 @@ const AllSubjects = () => {
       </Box>
     );
   }
-  const subjectNames = subjects.map((subject) => subject.name);
+  const locationNames = locations.map((location) => location.name);
   return (
     <>
       <Box m="1.5rem 2.5rem">
-        <Header title={"All Subjects"}></Header>
-        <AddSubject subjects={subjectNames} />
+        <Header title={"All Locations"}></Header>
+        {/* <Addlocation locations={locationNames} /> */}
+        <AddLocation locations={locationNames} />
         <Grid container spacing={2}>
-          {subjects.map((subject, index) => (
+          {locations.map((location, index) => (
             <Grid item xs={12} sm={6} md={3} key={index}>
-              {/* Render your subject component here */}
-              {/* For example: <SubjectItem subject={subject} /> */}
+              {/* Render your location component here */}
+              {/* For example: <locationItem location={location} /> */}
               <Box
                 sx={{
                   padding: "3%",
@@ -96,7 +97,7 @@ const AllSubjects = () => {
                   background: theme.palette.background.alt,
                 }}
               >
-                <Typography variant="h4">{subject.name}</Typography>
+                <Typography variant="h4">{location.name}</Typography>
                 <Button
                   color="error"
                   onClick={() => {
@@ -113,7 +114,7 @@ const AllSubjects = () => {
                   aria-describedby="alert-dialog-slide-description"
                 >
                   <DialogTitle>
-                    {`Are you sure you want to delete this subject named "${subject.name}"?`}
+                    {`Are you sure you want to delete this location named "${location.name}"?`}
                   </DialogTitle>
                   <DialogActions>
                     <Button
@@ -127,8 +128,8 @@ const AllSubjects = () => {
                       variant="contained"
                       color="error"
                       onClick={() => {
-                        // console.log(subject._id);
-                        handleDeleteSubject(subject._id);
+                        // console.log(location._id);
+                        handleDeleteLocation(location._id);
                       }}
                     >
                       Delete
@@ -144,4 +145,4 @@ const AllSubjects = () => {
   );
 };
 
-export default AllSubjects;
+export default AllLocations;

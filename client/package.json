@@ -7,6 +7,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.12",
     "@mui/material": "^5.14.12",
+    "@mui/x-charts": "^6.0.0-alpha.17",
     "@mui/x-data-grid": "^6.16.1",
     "@nivo/bar": "^0.83.0",
     "@nivo/core": "^0.83.0",

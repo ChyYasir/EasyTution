@@ -85,8 +85,8 @@ const navItems = [
     icon: <AdminPanelSettingsOutlined />,
   },
   {
-    text: "All Guardians",
-    url: "allguardians",
+    text: "All Locations",
+    url: "alllocations",
     icon: <TrendingUpOutlined />,
   },
   {

@@ -74,6 +74,22 @@ export const api = createApi({
         method: "DELETE",
       }),
     }),
+    addLocation: builder.mutation({
+      query: (subject) => ({
+        url: "system/location/add",
+        method: "POST",
+        body: subject,
+      }),
+    }),
+    getAllLocations: builder.query({
+      query: () => "system/location/getAll",
+    }),
+    deleteLocation: builder.mutation({
+      query: (id) => ({
+        url: `/system/location/delete/${id}`,
+        method: "DELETE",
+      }),
+    }),
   }),
 });
 
@@ -90,4 +106,7 @@ export const {
   useAddSubjectMutation,
   useGetAllSubjectsQuery,
   useDeleteSubjectMutation,
+  useAddLocationMutation,
+  useGetAllLocationsQuery,
+  useDeleteLocationMutation,
 } = api;

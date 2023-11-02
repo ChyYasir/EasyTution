@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useAddTutorMutation, useGetAllSubjectsQuery } from "../../state/api";
+import {
+  useAddTutorMutation,
+  useGetAllLocationsQuery,
+  useGetAllSubjectsQuery,
+} from "../../state/api";
 import {
   Alert,
   Autocomplete,
@@ -32,6 +36,7 @@ import { validatePhoneNumber } from "../../components/validation";
 const AddTutor = () => {
   const theme = useTheme();
   const { data: allSubjects, isLoading } = useGetAllSubjectsQuery();
+  const { data: allLocations } = useGetAllLocationsQuery();
 
   const {
     handleSubmit,
@@ -74,8 +79,9 @@ const AddTutor = () => {
       </Box>
     );
   }
-  const locations = ["Mohakhali", "Khilgaon"];
+
   const subjects = allSubjects.map((subject) => subject.name);
+  const locations = allLocations.map((location) => location.name);
   return (
     <>
       <Container component="main">
