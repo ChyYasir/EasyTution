@@ -2,14 +2,21 @@ import { useTheme } from "@emotion/react";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { useAddOfferMutation } from "../../state/api";
+import {
+  useAddOfferMutation,
+  useGetAllLocationsQuery,
+  useGetAllSubjectsQuery,
+} from "../../state/api";
 import {
   Autocomplete,
+  Box,
   Button,
+  CircularProgress,
   Container,
   Grid,
   MenuItem,
   TextField,
+  Typography,
 } from "@mui/material";
 import Header from "../../components/Header";
 import { validatePhoneNumber } from "../../components/validation";
@@ -17,6 +24,10 @@ import { validatePhoneNumber } from "../../components/validation";
 const AddOffer = () => {
   const theme = useTheme();
 
+  const { data: allSubjects, isLoading: LoadingSubjects } =
+    useGetAllSubjectsQuery();
+  const { data: allLocations, isLoading: LoadingLocations } =
+    useGetAllLocationsQuery();
   const {
     handleSubmit,
     control,
@@ -41,8 +52,28 @@ const AddOffer = () => {
       setIsSubmitting(false);
     }
   };
-  const subjects = ["Physics", "Chemistry"];
-  const locations = ["Mohakhali", "Khilgaon"];
+
+  if (LoadingSubjects || LoadingLocations) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Typography variant="h2" color="secondary">
+          LOADING
+        </Typography>
+        <CircularProgress color="secondary" />
+      </Box>
+    );
+  }
+  const subjects = allSubjects.map((subject) => subject.name);
+  const locations = allLocations.map((location) => location.name);
+  // const subjects = [];
+  // const locations = [];
   return (
     <>
       <Container component="main">
@@ -239,7 +270,7 @@ const AddOffer = () => {
                 render={({ field }) => (
                   <Autocomplete
                     {...field}
-                    multiple
+                    // multiple
                     id="location"
                     options={locations}
                     defaultValue={[]}

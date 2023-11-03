@@ -1,9 +1,25 @@
+import Guardian from "../models/Guardian.js";
 import Offer from "../models/Offer.js";
 import Tutor from "../models/Tutor.js";
 
 export const addOffer = async (req, res) => {
   try {
-    const newOffer = new Offer(req.body);
+    const offerData = req.body;
+
+    let guardian = await Guardian.findOne({
+      guardianPhoneNumber: offerData.guardianPhoneNumber,
+    });
+
+    if (!guardian) {
+      guardian = new Guardian({
+        guardianName: offerData.guardianName,
+        guardianPhoneNumber: offerData.guardianPhoneNumber,
+        location: offerData.location,
+        address: offerData.address,
+        offerList: [],
+      });
+    }
+    const newOffer = new Offer(offerData);
 
     const matchedTutors = await Tutor.find({
       $and: [
@@ -31,7 +47,10 @@ export const addOffer = async (req, res) => {
     }));
     // const result = await newOffer.populate("Tutor");
     // console.log(result);
-    await newOffer.save();
+    newOffer.guardian = guardian._id;
+    guardian.offerList.push(newOffer._id);
+    await Promise.all([newOffer.save(), guardian.save()]);
+    // await newOffer.save();
     res.status(201).json({ message: "Offer added successfully" });
   } catch (error) {
     console.error(error);

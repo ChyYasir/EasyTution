@@ -10,6 +10,7 @@ const offerSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+
     location: [String],
     address: String,
     tutorGender: String,
@@ -50,6 +51,14 @@ const offerSchema = new mongoose.Schema(
     feeTaken: {
       type: Boolean,
       default: false,
+    },
+    feePercentage: {
+      type: Number,
+      default: 50,
+    },
+    guardian: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Guardian",
     },
   },
   { timestamps: true }

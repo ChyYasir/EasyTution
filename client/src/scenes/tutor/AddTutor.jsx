@@ -35,8 +35,10 @@ import { useTheme } from "@emotion/react";
 import { validatePhoneNumber } from "../../components/validation";
 const AddTutor = () => {
   const theme = useTheme();
-  const { data: allSubjects, isLoading } = useGetAllSubjectsQuery();
-  const { data: allLocations } = useGetAllLocationsQuery();
+  const { data: allSubjects, isLoading: LoadingSubjects } =
+    useGetAllSubjectsQuery();
+  const { data: allLocations, isLoading: LoadingLocations } =
+    useGetAllLocationsQuery();
 
   const {
     handleSubmit,
@@ -62,7 +64,7 @@ const AddTutor = () => {
       setIsSubmitting(false);
     }
   };
-  if (isLoading) {
+  if (LoadingSubjects || LoadingLocations) {
     return (
       <Box
         sx={{
@@ -82,6 +84,7 @@ const AddTutor = () => {
 
   const subjects = allSubjects.map((subject) => subject.name);
   const locations = allLocations.map((location) => location.name);
+
   return (
     <>
       <Container component="main">
