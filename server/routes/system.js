@@ -1,14 +1,13 @@
 import express from "express";
 import {
-  addSubject,
-  deleteSubject,
-  getAllSubjects,
-} from "../controllers/system.js";
-import {
   addLocation,
+  addSubject,
   deleteLocation,
+  deleteSubject,
   getAllLocations,
-} from "../controllers/location.js";
+  getAllSubjects,
+  updateLocation,
+} from "../controllers/system.js";
 
 const router = express.Router();
 
@@ -18,5 +17,6 @@ router
   .delete("/subject/delete/:id", deleteSubject)
   .post("/location/add", addLocation)
   .get("/location/getAll", getAllLocations)
-  .delete("/location/delete/:id", deleteLocation);
+  .delete("/location/delete/:id", deleteLocation)
+  .put("/location/update/:id", updateLocation);
 export default router;

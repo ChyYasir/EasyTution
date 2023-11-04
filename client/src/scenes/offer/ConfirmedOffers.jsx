@@ -11,7 +11,9 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Grid,
   Slide,
+  TextField,
   Typography,
 } from "@mui/material";
 import Header from "../../components/Header";
@@ -46,6 +48,8 @@ const ConfirmedOffers = () => {
   let status = useRef(null);
   // const [assignedTutor, setAssignedTutor] = useState(""); // Update assignedTutor
   let assignedTutor = useRef(null);
+  let feeTaken = useRef(null);
+  let feePercentage = useRef(null);
 
   let row_id = useRef(null);
   const [mutate] = useUpdateOfferMutation();
@@ -58,10 +62,9 @@ const ConfirmedOffers = () => {
       // console.log(assignedTutor);
       await mutate({
         id: offerId,
-        status: status.current,
-        assignedTutor: assignedTutor.current,
+        feeTaken: feeTaken.current,
       }).unwrap();
-      alert("The Offer is in Available Now!!!");
+      alert("The Fee is taken Successfully!!!");
       window.location.reload();
     } catch (error) {
       // console.log(error);
@@ -406,7 +409,7 @@ const ConfirmedOffers = () => {
             const timeToEnd = 30 * 24 * 60 * 60 * 1000 - timeDifferenceMs;
             // Check if the time difference is greater than 30 days (30 days = 30 * 24 * 60 * 60 * 1000 milliseconds)
             let isTimeDifferenceMoreThan30Days =
-              timeDifferenceMs > 1 * 24 * 60 * 60 * 1000;
+              timeDifferenceMs > 0.001 * 24 * 60 * 60 * 1000;
             // isTimeDifferenceMoreThan30Days = true;
             function formatTimeDifference(milliseconds) {
               const seconds = Math.floor((milliseconds / 1000) % 60);
@@ -416,8 +419,11 @@ const ConfirmedOffers = () => {
 
               return `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
             }
-            console.log({ timeToEnd });
+            // console.log({ timeToEnd });
             const timeRemaining = formatTimeDifference(timeToEnd);
+            console.info(row);
+            const feeToBeTaken =
+              row.original.salary * (row.original.feePercentage / 100);
             return (
               <>
                 <div
@@ -443,13 +449,14 @@ const ConfirmedOffers = () => {
                           onClick={() => {
                             // console.info(row);
                             // console.log(row.original.assignedTutor._id);
-                            status.current = "confirmed";
-                            assignedTutor.current =
-                              row.original.assignedTutor._id;
+                            // status.current = "confirmed";
+                            // assignedTutor.current =
+                            //   row.original.assignedTutor._id;
+                            // feeTaken.current = true;
                             handleClickOpen();
                           }}
                         >
-                          Take Fee
+                          Take {feeToBeTaken} TK
                         </Button>
                         <Dialog
                           open={open}
@@ -461,6 +468,7 @@ const ConfirmedOffers = () => {
                           <DialogTitle>
                             {"Are you sure you have already taken this fee?"}
                           </DialogTitle>
+
                           <DialogActions>
                             <Button
                               variant="contained"
@@ -473,7 +481,8 @@ const ConfirmedOffers = () => {
                               variant="contained"
                               color="error"
                               onClick={() => {
-                                handleUpdateOffer(row_id.current);
+                                feeTaken.current = true;
+                                // handleUpdateOffer(row_id.current);
                               }}
                             >
                               Yes

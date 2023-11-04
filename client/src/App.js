@@ -17,6 +17,7 @@ import PendingOffers from "./scenes/offer/PendingOffers";
 import ConfirmedOffers from "./scenes/offer/ConfirmedOffers";
 import AllSubjects from "./scenes/system/AllSubjects";
 import AllLocations from "./scenes/system/AllLocations";
+import OfferVLocation from "./scenes/analytics/OfferVLocation";
 
 function App() {
   const mode = useSelector((state) => state.global.mode);
@@ -43,6 +44,7 @@ function App() {
               <Route path="/confirmedoffers" element={<ConfirmedOffers />} />
               <Route path="/allsubjects" element={<AllSubjects />} />
               <Route path="/alllocations" element={<AllLocations />} />
+              <Route path="/offervslocation" element={<OfferVLocation />} />
             </Route>
           </Routes>
         </ThemeProvider>

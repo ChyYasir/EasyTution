@@ -1,6 +1,16 @@
 // Create a tutor schema (models/tutor.js)
 import mongoose from "mongoose";
 
+const offerDetailsSchema = new mongoose.Schema({
+  offerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Offer",
+  },
+  location: [String],
+  address: String,
+  salary: Number,
+  feePercentage: Number,
+});
 const tutorSchema = new mongoose.Schema(
   {
     name: String,
@@ -21,6 +31,12 @@ const tutorSchema = new mongoose.Schema(
     emergencyPhoneNumber: String, // Add Emergency Contact Number field
     presentAddress: String, // Add Present Address field
     otherDetails: String,
+
+    notConfirmedOffersCount: {
+      type: Number,
+      default: 0,
+    },
+    confirmedOffers: [offerDetailsSchema], // List of confirmed offers with details
   },
   { timestamps: true }
 );

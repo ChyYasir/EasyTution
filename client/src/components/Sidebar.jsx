@@ -90,8 +90,13 @@ const navItems = [
     icon: <TrendingUpOutlined />,
   },
   {
-    text: "IMPORTANT INFO",
+    text: "BUSINESS ANALYTICS",
     icon: null,
+  },
+  {
+    text: "Offer Vs Location",
+    url: "offervslocation",
+    icon: <TrendingUpOutlined />,
   },
 ];
 const Sidebar = ({

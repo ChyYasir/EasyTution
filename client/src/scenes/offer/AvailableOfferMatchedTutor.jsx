@@ -114,12 +114,12 @@ const AvailableOfferMatchedTutor = () => {
       content: `${data?.guardianPhoneNumber}`,
     },
     {
-      label: "Location",
-      content: `${data?.location}`,
+      label: "Guardian ID",
+      content: `${data?.guardian}`,
     },
     {
-      label: "Address",
-      content: `${data?.address}`,
+      label: "Location",
+      content: `${data?.location}`,
     },
   ];
   const offerInfoRight = [

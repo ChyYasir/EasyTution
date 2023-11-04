@@ -13,10 +13,10 @@ export const api = createApi({
       }),
     }),
     updateTutor: builder.mutation({
-      query: ({ id, updatedTutor }) => ({
+      query: ({ id, updatedFields, offerDetails }) => ({
         url: `tutor/update/${id}`,
         method: "PUT",
-        body: updatedTutor,
+        body: { updatedFields, offerDetails },
       }),
     }),
     getAllTutors: builder.query({
@@ -46,10 +46,10 @@ export const api = createApi({
       }),
     }),
     updateOffer: builder.mutation({
-      query: ({ id, status, assignedTutor }) => ({
+      query: ({ id, status, assignedTutor, feeTaken, feePercentage }) => ({
         url: `offer/update/${id}`,
         method: "PUT", // or 'PATCH' based on your API
-        body: { status, assignedTutor },
+        body: { status, assignedTutor, feeTaken, feePercentage },
       }),
     }),
     updateMatchedTutorContact: builder.mutation({
@@ -90,6 +90,13 @@ export const api = createApi({
         method: "DELETE",
       }),
     }),
+    updateLocation: builder.mutation({
+      query: ({ id, updatedFields }) => ({
+        url: `system/location/update/${id}`,
+        method: "PUT",
+        body: updatedFields,
+      }),
+    }),
   }),
 });
 
@@ -109,4 +116,5 @@ export const {
   useAddLocationMutation,
   useGetAllLocationsQuery,
   useDeleteLocationMutation,
+  useUpdateLocationMutation,
 } = api;

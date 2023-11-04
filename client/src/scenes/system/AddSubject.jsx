@@ -46,19 +46,17 @@ const AddSubject = ({ subjects }) => {
     if (subject === "") {
       alert("Enter a valid Subject Name.");
     } else {
-      if (subjects.some((subject) => subject.toLowerCase() === subjectName)) {
-        alert("This Subject is already Present");
-      } else {
-        setIsSubmitting(true);
-        try {
-          await addSubject(formData).unwrap();
-          alert("Subject Added Successfully!!!");
-          window.location.reload();
-        } catch (error) {
-          alert("Failed to add this subject");
-        } finally {
-          setIsSubmitting(false);
-        }
+      setIsSubmitting(true);
+      try {
+        const response = await addSubject(formData).unwrap();
+        // console.log(response);
+        alert(response.message);
+        // alert("Subject Added Successfully!!!");
+        window.location.reload();
+      } catch (error) {
+        alert("Failed to add this subject");
+      } finally {
+        setIsSubmitting(false);
       }
     }
   };

@@ -10,13 +10,16 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Grid,
   Slide,
+  TextField,
   Typography,
 } from "@mui/material";
 import Header from "../../components/Header";
 import {
   useDeleteAvailableOfferMutation,
   useUpdateOfferMutation,
+  useUpdateTutorMutation,
 } from "../../state/api";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -41,29 +44,38 @@ function HeaderCell({ column }) {
   );
 }
 const PendingOffers = () => {
-  // const [status, setStatus] = useState(""); // Update status
   let status = useRef(null);
-  // const [assignedTutor, setAssignedTutor] = useState(""); // Update assignedTutor
+
   let assignedTutor = useRef(null);
 
+  let feeTaken = useRef(null);
+  // for taking percentage of fee
+  let feePercentage = useRef(null);
   let row_id = useRef(null);
   const [mutate] = useUpdateOfferMutation();
-
+  const [updateTutor] = useUpdateTutorMutation();
   const handleUpdateOffer = async (offerId) => {
     // Replace 'offerId' with the actual offer ID
     // await addTutor(data).unwrap();
     try {
       // console.log(status);
       // console.log(assignedTutor);
-      await mutate({
-        id: offerId,
-        status: status.current,
-        assignedTutor: assignedTutor.current,
-      }).unwrap();
+
       if (status.current === "available") {
+        await mutate({
+          id: offerId,
+          status: status.current,
+          assignedTutor: assignedTutor.current,
+        }).unwrap();
         alert("The Offer is in Available List Now!!!");
       }
       if (status.current === "confirmed") {
+        await mutate({
+          id: offerId,
+          status: status.current,
+          assignedTutor: assignedTutor.current,
+          feePercentage: feePercentage.current,
+        }).unwrap();
         alert(`Offer ${offerId} is confirmed`);
       }
       window.location.reload();
@@ -366,6 +378,7 @@ const PendingOffers = () => {
                 <DialogTitle>
                   {"Are you sure you want to not confirm this offer?"}
                 </DialogTitle>
+
                 <DialogActions>
                   <Button
                     variant="contained"
@@ -396,6 +409,7 @@ const PendingOffers = () => {
                   status.current = "confirmed";
                   assignedTutor.current = row.original.assignedTutor._id;
                   row_id.current = row.id;
+                  // feePercentage.current =
                   handleClickOpen();
                 }}
               >
@@ -411,6 +425,17 @@ const PendingOffers = () => {
                 <DialogTitle>
                   {"Are you sure you want to cornfirm this offer?"}
                 </DialogTitle>
+                <Box sx={{ margin: "1rem" }}>
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Percentage Fee" // Label for the fee TextField
+                      variant="outlined"
+                      fullWidth
+                      value={feePercentage.current} // Value for the fee TextField
+                      onChange={(e) => (feePercentage.current = e.target.value)} // Handle fee changes
+                    />
+                  </Grid>
+                </Box>
                 <DialogActions>
                   <Button
                     variant="contained"
@@ -426,7 +451,7 @@ const PendingOffers = () => {
                       // console.log(status.current);
                       // console.log(assignedTutor.current);
                       // console.log(row_id.current);
-
+                      console.log(feePercentage.current);
                       handleUpdateOffer(row_id.current);
                     }}
                   >

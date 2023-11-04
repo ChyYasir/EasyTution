@@ -47,21 +47,17 @@ const AddLocation = ({ locations }) => {
     if (location === "") {
       alert("Enter a valid location Name.");
     } else {
-      if (
-        locations.some((location) => location.toLowerCase() === locationName)
-      ) {
-        alert("This location is already Present");
-      } else {
-        setIsSubmitting(true);
-        try {
-          await addLocation(formData).unwrap();
-          alert("location Added Successfully!!!");
-          window.location.reload();
-        } catch (error) {
-          alert("Failed to add this location");
-        } finally {
-          setIsSubmitting(false);
-        }
+      setIsSubmitting(true);
+      try {
+        const response = await addLocation(formData).unwrap();
+        // console.log({ response });
+        alert(response.message);
+        // alert("location Added Successfully!!!");
+        window.location.reload();
+      } catch (error) {
+        alert("Failed to add this location");
+      } finally {
+        setIsSubmitting(false);
       }
     }
   };

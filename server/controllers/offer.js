@@ -1,4 +1,5 @@
 import Guardian from "../models/Guardian.js";
+import Location from "../models/Location.js";
 import Offer from "../models/Offer.js";
 import Tutor from "../models/Tutor.js";
 
@@ -6,6 +7,7 @@ export const addOffer = async (req, res) => {
   try {
     const offerData = req.body;
 
+    // check whether the guardian is present or not
     let guardian = await Guardian.findOne({
       guardianPhoneNumber: offerData.guardianPhoneNumber,
     });
@@ -45,12 +47,18 @@ export const addOffer = async (req, res) => {
       tutor: tutor,
       contacted: false, // Set to true if contacted
     }));
-    // const result = await newOffer.populate("Tutor");
-    // console.log(result);
+
+    // guardian id into the offer
     newOffer.guardian = guardian._id;
+    // push this offer into the guardian's offerlist
     guardian.offerList.push(newOffer._id);
-    await Promise.all([newOffer.save(), guardian.save()]);
-    // await newOffer.save();
+
+    const location = await Location.findOne({ name: newOffer.location[0] });
+    // increment location offercount
+    location.offerCount = location.offerCount + 1;
+
+    await Promise.all([newOffer.save(), guardian.save(), location.save()]);
+
     res.status(201).json({ message: "Offer added successfully" });
   } catch (error) {
     console.error(error);
@@ -309,7 +317,7 @@ export const deleteAvailableOffer = async (req, res) => {
     console.log({ offerId });
     // Check if the offer with the specified ID exists
     const offer = await Offer.findById(offerId);
-    console.log(offer);
+
     if (!offer) {
       return res.status(404).json({ message: "Offer not found" });
     }
@@ -327,29 +335,44 @@ export const deleteAvailableOffer = async (req, res) => {
 export const updateOffer = async (req, res) => {
   try {
     const offerId = req.params.id;
-    const { status, assignedTutor } = req.body;
+    const { status, assignedTutor, feeTaken, feePercentage } = req.body;
 
-    // Find the offer by ID
-
-    console.log(offerId);
     const offer = await Offer.findById(offerId);
 
     if (!offer) {
       return res.status(404).json({ message: "Offer not found" });
     }
-    console.log({ status });
-    console.log({ assignedTutor });
+
     // Update the status and assigned tutor
     if (status) {
       offer.status = status;
     }
 
-    offer.assignedTutor = assignedTutor;
     if (status === "confirmed") {
       offer.startDate = new Date();
+      offer.feePercentage = feePercentage;
+      const tutor = await Tutor.findById(assignedTutor);
+      tutor.confirmedOffers.push({
+        offerId: offer._id,
+        location: offer.location,
+        address: offer.address,
+        salary: offer.salary,
+        feePercentage: offer.feePercentage,
+      });
+
+      await tutor.save();
     }
-    console.log({ offer });
-    // Save the updated offer
+    if (status === "available") {
+      const tutor = await Tutor.findById(offer.assignedTutor);
+      if (tutor.notConfirmedOffersCount) {
+        tutor.notConfirmedOffersCount = tutor.notConfirmedOffersCount + 1;
+      } else {
+        tutor.notConfirmedOffersCount = 1;
+      }
+
+      await tutor.save();
+    }
+    offer.assignedTutor = assignedTutor;
     await offer.save();
 
     res.json({ message: "Offer updated successfully", offer });

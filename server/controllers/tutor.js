@@ -122,23 +122,25 @@ export const getTutor = async (req, res) => {
 export const updateTutor = async (req, res) => {
   try {
     const tutorId = req.params.id; // Get the tutor's ID from the request parameters
-    const updatedFields = req.body; // Get the fields to be updated from the request body
-
+    const updatedFields = req.body.updatedFields;
+    const addOffer = req.body.offerDetails;
+    console.log({ addOffer });
+    console.log(updatedFields);
     // Find the tutor by ID and update the specified fields using async/await
-    console.log({ updatedFields });
-    const updatedTutor = await Tutor.findByIdAndUpdate(
-      tutorId,
-      { $set: updatedFields },
-      { new: true }
-    );
+    // console.log({ updatedFields });
+    // const updatedTutor = await Tutor.findByIdAndUpdate(
+    //   tutorId,
+    //   { $set: updatedFields },
+    //   { new: true }
+    // );
 
-    if (!updatedTutor) {
-      console.error("Tutor not found");
-      res.status(404).json({ error: "Tutor not found" });
-      return;
-    }
-    // console.log({ updatedTutor });
-    res.status(200).json(updatedTutor);
+    // if (!updatedTutor) {
+    //   console.error("Tutor not found");
+    //   res.status(404).json({ error: "Tutor not found" });
+    //   return;
+    // }
+    // // console.log({ updatedTutor });
+    // res.status(200).json(updatedTutor);
   } catch (err) {
     console.error("Error updating tutor:", err);
     res.status(500).json({ error: "Error updating tutor" });

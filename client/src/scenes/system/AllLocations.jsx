@@ -17,7 +17,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FolderIcon from "@mui/icons-material/Folder";
 
@@ -30,6 +30,7 @@ import Header from "../../components/Header";
 import { useTheme } from "@emotion/react";
 import { Controller, useForm } from "react-hook-form";
 import AddLocation from "./AddLocation";
+import ChangeLocationColor from "./ChangeLocationColor";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -37,7 +38,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const AllLocations = () => {
   const [open, setOpen] = useState(false);
-
+  const locationId = useRef(null);
+  const locationName = useRef(null);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -52,7 +54,6 @@ const AllLocations = () => {
   const [deleteLocation] = useDeleteLocationMutation();
 
   const handleDeleteLocation = async (locationId) => {
-    // Accept offerId as an argument
     try {
       const response = await deleteLocation(locationId).unwrap();
       alert(`location deleted successfully`);
@@ -77,6 +78,7 @@ const AllLocations = () => {
     );
   }
   const locationNames = locations.map((location) => location.name);
+
   return (
     <>
       <Box m="1.5rem 2.5rem">
@@ -97,10 +99,15 @@ const AllLocations = () => {
                   background: theme.palette.background.alt,
                 }}
               >
-                <Typography variant="h4">{location.name}</Typography>
+                <Box>
+                  <Typography variant="h4">{location.name}</Typography>
+                  <ChangeLocationColor location={location} />
+                </Box>
                 <Button
                   color="error"
                   onClick={() => {
+                    locationId.current = location._id;
+                    locationName.current = location.name;
                     handleClickOpen();
                   }}
                 >
@@ -114,7 +121,7 @@ const AllLocations = () => {
                   aria-describedby="alert-dialog-slide-description"
                 >
                   <DialogTitle>
-                    {`Are you sure you want to delete this location named "${location.name}"?`}
+                    {`Are you sure you want to delete this location named "${locationName.current}"?`}
                   </DialogTitle>
                   <DialogActions>
                     <Button
@@ -129,7 +136,7 @@ const AllLocations = () => {
                       color="error"
                       onClick={() => {
                         // console.log(location._id);
-                        handleDeleteLocation(location._id);
+                        handleDeleteLocation(locationId.current);
                       }}
                     >
                       Delete

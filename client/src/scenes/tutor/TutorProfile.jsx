@@ -55,7 +55,7 @@ const UpdateProfile = ({ tutor }) => {
     setIsSubmitting(true);
     console.log({ formData });
     try {
-      await updateTutor({ id: tutor_id, updatedTutor: formData }).unwrap();
+      await updateTutor({ id: tutor_id, updatedFields: formData }).unwrap();
       alert("Tutor Updated Successfully!!!");
       window.location.reload();
       // reset();
@@ -335,7 +335,7 @@ const UpdateEducation = ({ tutor }) => {
   const onSubmit = async (formData) => {
     setIsSubmitting(true);
     try {
-      await updateTutor({ id: tutor_id, updatedTutor: formData }).unwrap();
+      await updateTutor({ id: tutor_id, updatedFields: formData }).unwrap();
       alert("Tutor's Education Info Updated Successfully!!!");
       window.location.reload();
     } catch (error) {
