@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { MaterialReactTable } from "material-react-table";
 import { Link, Navigate, useNavigate } from "react-router-dom";
+
 import {
   Box,
   Button,
@@ -40,7 +41,7 @@ function HeaderCell({ column }) {
     </>
   );
 }
-const ConfirmedOffers = () => {
+const Feedback = () => {
   const navigate = useNavigate();
 
   let row_id = useRef(null);
@@ -84,12 +85,7 @@ const ConfirmedOffers = () => {
   //table state
   const [columnFilters, setColumnFilters] = useState([]);
   const [globalFilter, setGlobalFilter] = useState("");
-  const [sorting, setSorting] = useState([
-    {
-      id: "startDate",
-      desc: true, // This indicates descending order
-    },
-  ]);
+  const [sorting, setSorting] = useState([]);
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 5,
@@ -105,7 +101,7 @@ const ConfirmedOffers = () => {
         setIsRefetching(true);
       }
 
-      const url = new URL("/offer/getConfirmedOffers", "http://localhost:8080");
+      const url = new URL("/offer/feedbackOffers", "http://localhost:8080");
       url.searchParams.set(
         "start",
         `${pagination.pageIndex * pagination.pageSize}`
@@ -370,32 +366,7 @@ const ConfirmedOffers = () => {
           rowCount={rowCount}
           enableRowActions
           renderRowActions={({ row }) => {
-            // const updatedAt = new Date(row.original.updatedAt); // Your updatedAt timestamp
-            const startTime = new Date(row.original.startDate);
-            // Get the current time as a Date object
-            const currentTime = new Date();
-
-            // Calculate the time difference in milliseconds
-            const timeDifferenceMs = currentTime - startTime;
-            const timeToEnd = 30 * 24 * 60 * 60 * 1000 - timeDifferenceMs;
-            // Check if the time difference is greater than 30 days (30 days = 30 * 24 * 60 * 60 * 1000 milliseconds)
-            let isTimeDifferenceMoreThan30Days =
-              timeDifferenceMs > 0.001 * 24 * 60 * 60 * 1000;
-            // isTimeDifferenceMoreThan30Days = true;
-            function formatTimeDifference(milliseconds) {
-              const seconds = Math.floor((milliseconds / 1000) % 60);
-              const minutes = Math.floor((milliseconds / (1000 * 60)) % 60);
-              const hours = Math.floor((milliseconds / (1000 * 60 * 60)) % 24);
-              const days = Math.floor(milliseconds / (1000 * 60 * 60 * 24));
-
-              return `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
-            }
-
-            const timeRemaining = formatTimeDifference(timeToEnd);
-            console.info(row);
-            const feeToBeTaken =
-              row.original.salary * (row.original.feePercentage / 100);
-            console.log({ feeToBeTaken });
+            const takeFeedback = true;
             return (
               <>
                 <div
@@ -406,7 +377,7 @@ const ConfirmedOffers = () => {
                     gap: "0.5rem",
                   }}
                 >
-                  {isTimeDifferenceMoreThan30Days ? (
+                  {takeFeedback ? (
                     <Box>
                       <div
                         style={{
@@ -417,15 +388,19 @@ const ConfirmedOffers = () => {
                       >
                         <Button
                           variant="contained"
-                          color="error"
+                          //   color="error"
+                          sx={{
+                            background: "#21b548",
+                            color: "white",
+                            "&:hover": {
+                              background: "#1a9740", // Change the background color on hover
+                            },
+                          }}
                           onClick={() => {
-                            row_id.current = row.id;
-                            status.current = "running";
-                            feeTaken.current = feeToBeTaken;
-                            handleClickOpen();
+                            // handleClickOpen();
                           }}
                         >
-                          Take {feeToBeTaken} TK
+                          Give Feed back
                         </Button>
                         <Dialog
                           open={open}
@@ -461,7 +436,7 @@ const ConfirmedOffers = () => {
                     </Box>
                   ) : (
                     <Box>
-                      <Typography> {timeRemaining}</Typography>
+                      {/* <Typography> {timeRemaining}</Typography> */}
                       <Typography>Remaining</Typography>
                     </Box>
                   )}
@@ -497,4 +472,4 @@ const ConfirmedOffers = () => {
   );
 };
 
-export default ConfirmedOffers;
+export default Feedback;

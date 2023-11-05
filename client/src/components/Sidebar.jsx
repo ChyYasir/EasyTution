@@ -11,6 +11,7 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
+import FeedbackIcon from "@mui/icons-material/Feedback";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import FlexBetween from "./FlexBetween";
@@ -62,6 +63,11 @@ const navItems = [
     icon: <PublicOutlined />,
   },
   {
+    text: "Feedback",
+    url: "feedback",
+    icon: <FeedbackIcon />,
+  },
+  {
     text: "TUTOR MANAGEMENT",
     icon: null,
   },
@@ -96,6 +102,11 @@ const navItems = [
   {
     text: "Offer Vs Location",
     url: "offervslocation",
+    icon: <TrendingUpOutlined />,
+  },
+  {
+    text: "Monthly Sales",
+    url: "monthlysales",
     icon: <TrendingUpOutlined />,
   },
 ];

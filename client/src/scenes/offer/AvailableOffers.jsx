@@ -72,7 +72,12 @@ const AvailableOffers = () => {
   //table state
   const [columnFilters, setColumnFilters] = useState([]);
   const [globalFilter, setGlobalFilter] = useState("");
-  const [sorting, setSorting] = useState([]);
+  const [sorting, setSorting] = useState([
+    {
+      id: "createdAt",
+      desc: true, // This indicates descending order
+    },
+  ]);
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 5,
@@ -279,7 +284,9 @@ const AvailableOffers = () => {
           columns={columns}
           data={data}
           getRowId={(row) => row._id}
-          initialState={{ showColumnFilters: true }}
+          initialState={{
+            showColumnFilters: true,
+          }}
           manualFiltering
           manualPagination
           manualSorting

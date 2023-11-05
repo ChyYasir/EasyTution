@@ -359,9 +359,6 @@ const PendingOffers = () => {
                 variant="contained"
                 color="primary"
                 onClick={() => {
-                  // console.log(status);
-                  // console.log(assignedTutor);
-                  // console.log(row.id);
                   row_id.current = row.id;
                   handleClickOpenOne();
                 }}

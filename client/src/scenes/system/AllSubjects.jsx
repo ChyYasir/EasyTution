@@ -17,7 +17,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FolderIcon from "@mui/icons-material/Folder";
 
@@ -37,7 +37,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const AllSubjects = () => {
   const [open, setOpen] = useState(false);
-
+  const subjectId = useRef(null);
+  const subjectName = useRef(null);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -47,7 +48,7 @@ const AllSubjects = () => {
   };
   const theme = useTheme();
   const { data: subjects, isLoading } = useGetAllSubjectsQuery();
-  console.log(subjects);
+  // console.log(subjects);
 
   const [deleteSubject] = useDeleteSubjectMutation();
 
@@ -100,6 +101,8 @@ const AllSubjects = () => {
                 <Button
                   color="error"
                   onClick={() => {
+                    subjectId.current = subject._id;
+                    subjectName.current = subject.name;
                     handleClickOpen();
                   }}
                 >
@@ -113,7 +116,7 @@ const AllSubjects = () => {
                   aria-describedby="alert-dialog-slide-description"
                 >
                   <DialogTitle>
-                    {`Are you sure you want to delete this subject named "${subject.name}"?`}
+                    {`Are you sure you want to delete this subject named "${subjectName.current}"?`}
                   </DialogTitle>
                   <DialogActions>
                     <Button
@@ -128,7 +131,7 @@ const AllSubjects = () => {
                       color="error"
                       onClick={() => {
                         // console.log(subject._id);
-                        handleDeleteSubject(subject._id);
+                        handleDeleteSubject(subjectId.current);
                       }}
                     >
                       Delete

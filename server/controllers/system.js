@@ -1,4 +1,6 @@
+import Analytics from "../models/Analytics.js";
 import Location from "../models/Location.js";
+import MonthlyData from "../models/MonthlyData.js";
 import Subject from "../models/Subject.js";
 
 export const addSubject = async (req, res) => {
@@ -125,5 +127,55 @@ export const updateLocation = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Failed to update location" });
+  }
+};
+
+export const addAnalytics = async (req, res) => {
+  try {
+    const newAnalytics = new Analytics(req.body);
+
+    const foundAnalytics = await Analytics.findOne({ name: newAnalytics.name });
+    if (foundAnalytics) {
+      return res.json({ message: "Analytics is already present" });
+    }
+    const savedAnalytics = await newAnalytics.save();
+    res.json({ data: savedAnalytics, message: "Analytics Added Successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to add analytics" });
+  }
+};
+
+export const getAnalytics = async (req, res) => {
+  try {
+    const analytics = await Analytics.findOne({ name: "analytics" }).exec();
+
+    if (analytics) {
+      // Analytics document found, send it as a response
+      res.status(200).json(analytics);
+    } else {
+      // Analytics document not found
+      res.status(404).json({ error: "Analytics not found" });
+    }
+  } catch (error) {
+    // Handle any errors that occur during the database query
+    res.status(500).json({ error: "Failed to retrieve Analytics" });
+  }
+};
+
+export const getMonthlyDataByYear = async (req, res) => {
+  try {
+    const year = req.params.year;
+    const monthlyData = await MonthlyData.findOne({ year }).exec();
+
+    if (!monthlyData) {
+      return res
+        .status(404)
+        .json({ error: "Monthly data not found for the year." });
+    }
+
+    res.status(200).json(monthlyData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch monthly data." });
   }
 };

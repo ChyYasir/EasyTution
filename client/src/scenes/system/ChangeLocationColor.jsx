@@ -51,6 +51,7 @@ const ChangeLocationColor = ({ location }) => {
       <Button
         sx={{
           background: location.color,
+          color: "white",
           "&:hover": {
             background: location.color, // Set hover background to the same color
           },

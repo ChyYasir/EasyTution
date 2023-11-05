@@ -49,7 +49,7 @@ const AllLocations = () => {
   };
   const theme = useTheme();
   const { data: locations, isLoading } = useGetAllLocationsQuery();
-  console.log(locations);
+  // console.log(locations);
 
   const [deleteLocation] = useDeleteLocationMutation();
 
@@ -99,8 +99,17 @@ const AllLocations = () => {
                   background: theme.palette.background.alt,
                 }}
               >
-                <Box>
-                  <Typography variant="h4">{location.name}</Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography variant="h2" sx={{ fontWeight: "bold" }}>
+                    {location.name}
+                  </Typography>
                   <ChangeLocationColor location={location} />
                 </Box>
                 <Button
@@ -115,33 +124,35 @@ const AllLocations = () => {
                 </Button>
                 <Dialog
                   open={open}
-                  TransitionComponent={Transition}
-                  keepMounted
+                  // TransitionComponent={Transition}
+                  // keepMounted
                   onClose={handleClose}
-                  aria-describedby="alert-dialog-slide-description"
                 >
-                  <DialogTitle>
-                    {`Are you sure you want to delete this location named "${locationName.current}"?`}
-                  </DialogTitle>
-                  <DialogActions>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={handleClose}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="error"
-                      onClick={() => {
-                        // console.log(location._id);
-                        handleDeleteLocation(locationId.current);
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  </DialogActions>
+                  <Box m="1rem 1.5rem">
+                    <Header title={"Delete Location"} />
+                    <DialogTitle>
+                      {`Are you sure you want to delete this location named "${locationName.current}"?`}
+                    </DialogTitle>
+                    <DialogActions>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleClose}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color="error"
+                        onClick={() => {
+                          // console.log(location._id);
+                          handleDeleteLocation(locationId.current);
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </DialogActions>
+                  </Box>
                 </Dialog>
               </Box>
             </Grid>

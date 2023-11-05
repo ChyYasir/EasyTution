@@ -10,6 +10,10 @@ const locationSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  availableOfferCount: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const Location = mongoose.model("Location", locationSchema);

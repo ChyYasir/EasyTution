@@ -46,10 +46,24 @@ export const api = createApi({
       }),
     }),
     updateOffer: builder.mutation({
-      query: ({ id, status, assignedTutor, feeTaken, feePercentage }) => ({
+      query: ({
+        id,
+        status,
+        assignedTutor,
+        feeTaken,
+        feePercentage,
+        offerLocation,
+      }) => ({
         url: `offer/update/${id}`,
         method: "PUT", // or 'PATCH' based on your API
-        body: { status, assignedTutor, feeTaken, feePercentage },
+        body: { status, assignedTutor, feeTaken, feePercentage, offerLocation },
+      }),
+    }),
+    updateConfirmedOffer: builder.mutation({
+      query: ({ id, status, feeAmount }) => ({
+        url: `offer/confirm/update/${id}`,
+        method: "PUT", // or 'PATCH' based on your API
+        body: { status, feeAmount },
       }),
     }),
     updateMatchedTutorContact: builder.mutation({
@@ -97,6 +111,12 @@ export const api = createApi({
         body: updatedFields,
       }),
     }),
+    getMonthlyData: builder.query({
+      query: (year) => `system/monthlyData/get/${year}`,
+    }),
+    getAnalytics: builder.query({
+      query: () => "system/analytics/get",
+    }),
   }),
 });
 
@@ -109,6 +129,7 @@ export const {
   useGetAvailableOfferQuery,
   useDeleteAvailableOfferMutation,
   useUpdateOfferMutation,
+  useUpdateConfirmedOfferMutation,
   useUpdateMatchedTutorContactMutation,
   useAddSubjectMutation,
   useGetAllSubjectsQuery,
@@ -117,4 +138,6 @@ export const {
   useGetAllLocationsQuery,
   useDeleteLocationMutation,
   useUpdateLocationMutation,
+  useGetMonthlyDataQuery,
+  useGetAnalyticsQuery,
 } = api;

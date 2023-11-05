@@ -72,6 +72,7 @@ const AvailableOfferMatchedTutor = () => {
         id: offerId,
         status: status.current,
         assignedTutor: assignedTutor.current,
+        offerLocation: data?.location,
       }).unwrap();
       if (status.current === "pending") {
         alert("The Offer is Pending Successfully!!!");
