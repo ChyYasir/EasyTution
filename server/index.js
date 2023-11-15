@@ -19,7 +19,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(
   cors({
-    origin: "https://easy-tution.onrender.com",
+    // origin: "https://easy-tution.onrender.com",
+    origin: "*",
   })
 );
 
