@@ -74,6 +74,9 @@ const AddOffer = () => {
   const locations = allLocations.map((location) => location.name);
   // const subjects = [];
   // const locations = [];
+  const redBorderStyle = {
+    border: "2px solid red",
+  };
   return (
     <>
       <Container component="main">
@@ -108,6 +111,12 @@ const AddOffer = () => {
                         helperText={
                           errors.guardianName ? errors.guardianName.message : ""
                         }
+                        // InputProps={{
+                        //   style: { color: theme.palette.secondary[100] },
+                        // }}
+                        InputLabelProps={{
+                          style: { color: theme.palette.secondary[100] },
+                        }}
                       />
                     )}
                   />
@@ -133,6 +142,9 @@ const AddOffer = () => {
                             ? errors.guardianPhoneNumber.message
                             : ""
                         }
+                        InputLabelProps={{
+                          style: { color: theme.palette.secondary[100] },
+                        }}
                       />
                     )}
                   />
@@ -156,6 +168,9 @@ const AddOffer = () => {
                         fullWidth
                         error={!!errors.class}
                         helperText={errors.class ? errors.class.message : ""}
+                        InputLabelProps={{
+                          style: { color: theme.palette.secondary[100] },
+                        }}
                       />
                     )}
                   />
@@ -172,6 +187,9 @@ const AddOffer = () => {
                         label="Education Board"
                         variant="outlined"
                         fullWidth
+                        InputLabelProps={{
+                          style: { color: theme.palette.secondary[100] },
+                        }}
                       >
                         <MenuItem value="Cambridge">Cambridge</MenuItem>
                         <MenuItem value="Edexcel">Edexcel</MenuItem>
@@ -202,6 +220,9 @@ const AddOffer = () => {
                     fullWidth
                     error={!!errors.gender}
                     helperText={errors.gender ? errors.gender.message : ""}
+                    InputLabelProps={{
+                      style: { color: theme.palette.secondary[100] },
+                    }}
                   >
                     <MenuItem value="Male">Male</MenuItem>
                     <MenuItem value="Female">Female</MenuItem>
@@ -235,6 +256,9 @@ const AddOffer = () => {
                         helperText={
                           errors.subjects ? errors.subjects.message : ""
                         }
+                        InputLabelProps={{
+                          style: { color: theme.palette.secondary[100] },
+                        }}
                       />
                     )}
                   />
@@ -258,6 +282,9 @@ const AddOffer = () => {
                     helperText={
                       errors.daysPerWeek ? errors.daysPerWeek.message : ""
                     }
+                    InputLabelProps={{
+                      style: { color: theme.palette.secondary[100] },
+                    }}
                   />
                 )}
               />
@@ -286,6 +313,9 @@ const AddOffer = () => {
                         helperText={
                           errors.location ? errors.location.message : ""
                         }
+                        InputLabelProps={{
+                          style: { color: theme.palette.secondary[100] },
+                        }}
                       />
                     )}
                   />
@@ -306,6 +336,9 @@ const AddOffer = () => {
                     fullWidth
                     error={!!errors.address}
                     helperText={errors.address ? errors.address.message : ""}
+                    InputLabelProps={{
+                      style: { color: theme.palette.secondary[100] },
+                    }}
                   />
                 )}
               />
@@ -324,6 +357,9 @@ const AddOffer = () => {
                     fullWidth
                     error={!!errors.salary}
                     helperText={errors.salary ? errors.salary.message : ""}
+                    InputLabelProps={{
+                      style: { color: theme.palette.secondary[100] },
+                    }}
                   />
                 )}
               />

@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import Header from "../../components/Header";
 import { useUpdateConfirmedOfferMutation } from "../../state/api";
+import SubmitFeedback from "../../components/SubmitFeedback";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -366,6 +367,7 @@ const Feedback = () => {
           rowCount={rowCount}
           enableRowActions
           renderRowActions={({ row }) => {
+            // console.log(row);
             const takeFeedback = true;
             return (
               <>
@@ -386,52 +388,10 @@ const Feedback = () => {
                           gap: "0.5rem",
                         }}
                       >
-                        <Button
-                          variant="contained"
-                          //   color="error"
-                          sx={{
-                            background: "#21b548",
-                            color: "white",
-                            "&:hover": {
-                              background: "#1a9740", // Change the background color on hover
-                            },
-                          }}
-                          onClick={() => {
-                            // handleClickOpen();
-                          }}
-                        >
-                          Give Feed back
-                        </Button>
-                        <Dialog
-                          open={open}
-                          TransitionComponent={Transition}
-                          keepMounted
-                          onClose={handleClose}
-                          aria-describedby="alert-dialog-slide-description"
-                        >
-                          <DialogTitle>
-                            {"Are you sure you have already taken this fee?"}
-                          </DialogTitle>
-
-                          <DialogActions>
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              onClick={handleClose}
-                            >
-                              No
-                            </Button>
-                            <Button
-                              variant="contained"
-                              color="error"
-                              onClick={() => {
-                                handleUpdateConfirmedOffer(row_id.current);
-                              }}
-                            >
-                              Yes
-                            </Button>
-                          </DialogActions>
-                        </Dialog>
+                        <SubmitFeedback
+                          offerId={row.id}
+                          offerInfo={row.original}
+                        />
                       </div>
                     </Box>
                   ) : (

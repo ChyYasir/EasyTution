@@ -122,25 +122,90 @@ export const getTutor = async (req, res) => {
 export const updateTutor = async (req, res) => {
   try {
     const tutorId = req.params.id; // Get the tutor's ID from the request parameters
-    const updatedFields = req.body.updatedFields;
-    const addOffer = req.body.offerDetails;
-    console.log({ addOffer });
-    console.log(updatedFields);
-    // Find the tutor by ID and update the specified fields using async/await
-    // console.log({ updatedFields });
-    // const updatedTutor = await Tutor.findByIdAndUpdate(
-    //   tutorId,
-    //   { $set: updatedFields },
-    //   { new: true }
-    // );
+    const updatedFields = req.body;
 
-    // if (!updatedTutor) {
-    //   console.error("Tutor not found");
-    //   res.status(404).json({ error: "Tutor not found" });
-    //   return;
-    // }
-    // // console.log({ updatedTutor });
-    // res.status(200).json(updatedTutor);
+    // Find the tutor by ID and update the specified fields using async/await
+
+    const updatedTutor = await Tutor.findByIdAndUpdate(
+      tutorId,
+      { $set: updatedFields },
+      { new: true }
+    );
+
+    if (!updatedTutor) {
+      console.error("Tutor not found");
+      res.status(404).json({ error: "Tutor not found" });
+      return;
+    }
+    // console.log({ updatedTutor });
+    res.status(200).json(updatedTutor);
+  } catch (err) {
+    console.error("Error updating tutor:", err);
+    res.status(500).json({ error: "Error updating tutor" });
+  }
+};
+
+export const updateTutorProfileInfo = async (req, res) => {
+  try {
+    const tutorId = req.params.id;
+    const updatedFields = req.body;
+
+    // Find the tutor by ID and update the specified fields
+    const updatedTutor = await Tutor.findByIdAndUpdate(
+      tutorId,
+      { $set: updatedFields },
+      { new: true }
+    );
+
+    if (!updatedTutor) {
+      console.error("Tutor not found");
+      res.status(404).json({ error: "Tutor not found" });
+      return;
+    }
+
+    // Find offers that match the updated tutor's criteria
+    const matchingOffers = await Offer.find({
+      $and: [
+        { location: { $in: updatedTutor.preferredLocations } },
+        { subjects: { $in: updatedTutor.preferredSubjects } },
+        { educationBoard: updatedTutor.educationBoard },
+        { tutorGender: updatedTutor.gender },
+        { class: { $lte: updatedTutor.upToClass } },
+      ],
+    });
+
+    // Find the previously matched offers (before the update)
+    const previouslyMatchedOffers = await Offer.find({
+      "matchedTutors.tutor": updatedTutor._id,
+    });
+    // Remove the tutor from previously matched offers
+    const removePromises = previouslyMatchedOffers.map(async (offer) => {
+      offer.matchedTutors = offer.matchedTutors.filter(
+        (match) => match.tutor.toString() !== updatedTutor._id.toString()
+      );
+      await offer.save();
+    });
+
+    // Update the matchedTutors array of each matching offer
+    const updatePromises = matchingOffers.map(async (offer) => {
+      const existingMatch = offer.matchedTutors.find(
+        (match) => match.tutor.toString() === updatedTutor._id.toString()
+      );
+
+      if (!existingMatch) {
+        // If the tutor is not already in matchedTutors, add them
+        offer.matchedTutors.push({
+          tutor: updatedTutor._id,
+          contacted: false, // Set to true if contacted
+        });
+        await offer.save();
+      }
+    });
+
+    // // Wait for all updates and removals to complete
+    await Promise.all([...updatePromises, ...removePromises]);
+
+    res.status(200).json(updatedTutor);
   } catch (err) {
     console.error("Error updating tutor:", err);
     res.status(500).json({ error: "Error updating tutor" });

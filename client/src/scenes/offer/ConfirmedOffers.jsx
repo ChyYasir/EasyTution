@@ -392,9 +392,11 @@ const ConfirmedOffers = () => {
             }
 
             const timeRemaining = formatTimeDifference(timeToEnd);
-            console.info(row);
-            const feeToBeTaken =
-              row.original.salary * (row.original.feePercentage / 100);
+            // console.info(row);
+            const feeToBeTaken = (
+              row.original.salary *
+              (row.original.feePercentage / 100)
+            ).toFixed(2);
             console.log({ feeToBeTaken });
             return (
               <>

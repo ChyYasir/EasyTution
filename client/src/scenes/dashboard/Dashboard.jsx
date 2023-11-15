@@ -10,7 +10,8 @@ const Dashboard = () => {
   const theme = useTheme();
 
   const { data: analytics, isLoading } = useGetAnalyticsQuery();
-
+  let base = process.env.BASE_URL;
+  console.log({ base });
   if (isLoading) {
     return (
       <Box
@@ -62,6 +63,11 @@ const Dashboard = () => {
     {
       label: "Total Number of Offers",
       content: `${analytics?.totalNumberOfOffers}`,
+      size: "h1",
+    },
+    {
+      label: "Number of Confirmed Offers",
+      content: `${analytics?.numberOfConfirmedOffers}`,
       size: "h1",
     },
     {

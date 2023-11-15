@@ -1,5 +1,19 @@
 import mongoose from "mongoose";
-
+const reviewSchema = new mongoose.Schema({
+  date: {
+    type: Date,
+    default: Date.now,
+  },
+  stars: {
+    type: Number,
+    min: 1,
+    max: 5,
+  },
+  feedback: {
+    type: String,
+    maxlength: 500, // You can adjust the maximum length as needed
+  },
+});
 const offerSchema = new mongoose.Schema(
   {
     guardianName: {
@@ -60,6 +74,7 @@ const offerSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Guardian",
     },
+    reviews: [reviewSchema],
   },
   { timestamps: true }
 );

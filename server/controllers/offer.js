@@ -507,7 +507,7 @@ export const updateConfirmedOffer = async (req, res) => {
       return res.status(404).json({ message: "Offer not found" });
     }
     const analytics = await Analytics.findOne({ name: "analytics" });
-    analytics.totalFeeTaken = analytics.totalFeeTaken + feeAmount;
+    analytics.totalFeeTaken = analytics.totalFeeTaken + parseFloat(feeAmount);
     // update status to "running"
     offer.status = status;
     const currentDate = new Date();
@@ -539,12 +539,13 @@ export const updateConfirmedOffer = async (req, res) => {
 
       if (foundMonth) {
         // Month exists, update totalFeeTaken
-        foundMonth.totalFeeTaken = foundMonth.totalFeeTaken + feeAmount;
+        foundMonth.totalFeeTaken =
+          foundMonth.totalFeeTaken + parseFloat(feeAmount);
       } else {
         // Month doesn't exist, add a new entry
         data.monthlyData.push({
           month: currentMonthName,
-          totalFeeTaken: feeAmount,
+          totalFeeTaken: parseFloat(feeAmount),
         });
       }
 
@@ -593,5 +594,55 @@ export const updateTutorContacted = async (req, res) => {
     res.json(updatedOffer);
   } catch (error) {
     res.status(500).json({ message: "Error updating tutor contact", error });
+  }
+};
+
+export const updateReviews = async (req, res) => {
+  try {
+    const offerId = req.params.id;
+    const { stars, feedback } = req.body;
+
+    // Validate input
+    if (!stars || !feedback) {
+      return res
+        .status(400)
+        .json({ error: "Stars and feedback are required." });
+    }
+
+    // Find the offer by ID
+    const offer = await Offer.findById(offerId);
+
+    if (!offer) {
+      return res.status(404).json({ error: "Offer not found." });
+    }
+
+    // Update the reviews array with the new feedback
+    offer.reviews.push({
+      stars: stars,
+      feedback: feedback,
+      date: new Date(),
+    });
+
+    console.log({ offer });
+    const tutor = await Tutor.findById(offer.assignedTutor);
+
+    if (!tutor) {
+      return res.status(404).json({ error: "Tutor not found." });
+    }
+
+    tutor.reviews.push({
+      offerId: offerId,
+      stars: stars,
+      feedback: feedback,
+      date: new Date(),
+    });
+    // Save the updated offer
+    await offer.save();
+    await tutor.save();
+
+    res.status(200).json({ message: "Feedback updated successfully." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error." });
   }
 };

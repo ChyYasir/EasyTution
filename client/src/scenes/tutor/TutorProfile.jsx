@@ -23,11 +23,21 @@ import {
 import { PhotoCamera } from "@mui/icons-material";
 import { useTheme } from "@emotion/react";
 import { useParams } from "react-router-dom";
-import { useGetTutorQuery, useUpdateTutorMutation } from "../../state/api";
+import {
+  useGetAllLocationsQuery,
+  useGetAllSubjectsQuery,
+  useGetTutorQuery,
+  useUpdateTutorMutation,
+  useUpdateTutorProfileMutation,
+} from "../../state/api";
 import { Controller, useForm } from "react-hook-form";
 import Header from "../../components/Header";
 
 const UpdateProfile = ({ tutor }) => {
+  const { data: allSubjects, isLoading: LoadingSubjects } =
+    useGetAllSubjectsQuery();
+  const { data: allLocations, isLoading: LoadingLocations } =
+    useGetAllLocationsQuery();
   const [open1, setOpen1] = useState(false);
 
   const handleClickOpen = () => {
@@ -48,7 +58,7 @@ const UpdateProfile = ({ tutor }) => {
   } = useForm();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [updateTutor] = useUpdateTutorMutation();
+  const [updateTutor] = useUpdateTutorProfileMutation();
   console.log(tutor._id);
   const tutor_id = tutor._id;
   const onSubmit = async (formData) => {
@@ -66,8 +76,25 @@ const UpdateProfile = ({ tutor }) => {
       setIsSubmitting(false);
     }
   };
-  const subjects = ["Physics", "Chemistry"];
-  const locations = ["Mohakhali", "Khilgaon"];
+  if (LoadingSubjects || LoadingLocations) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Typography variant="h2" color="secondary">
+          LOADING
+        </Typography>
+        <CircularProgress color="secondary" />
+      </Box>
+    );
+  }
+  const subjects = allSubjects.map((subject) => subject.name);
+  const locations = allLocations.map((location) => location.name);
   // console.log({ tutor });
   return (
     <>
@@ -639,6 +666,17 @@ const Profile = () => {
     },
   ];
 
+  const statsInfo = [
+    {
+      label: "Number of Not Confirmed offers",
+      content: `${data?.notConfirmedOffersCount}`,
+    },
+    {
+      label: "Number of Not Confirmed offers",
+      content: `${data?.confirmedOffers}`,
+    },
+  ];
+
   if (isLoading) {
     return (
       <Box
@@ -725,10 +763,6 @@ const Profile = () => {
                   </label>
                 )}
               </Box>
-
-              {/* <Box>
-                <Button variant="outlined">Edit Profile</Button>
-              </Box> */}
             </Box>
           </Paper>
         </Grid>
@@ -776,7 +810,7 @@ const Profile = () => {
                     }}
                   />
                   <Tab
-                    label="Timeline"
+                    label="Stats"
                     sx={{
                       fontWeight: "bold",
                     }}
@@ -847,6 +881,35 @@ const Profile = () => {
                     );
                   })}
                   <UpdateEducation tutor={data} />
+                </Box>
+              )}
+              {value === 2 && (
+                <Box>
+                  {statsInfo.map(({ label, content }) => {
+                    return (
+                      <Box>
+                        <Grid
+                          container
+                          spacing={2}
+                          sx={{ marginBottom: "0.5rem" }}
+                        >
+                          <Grid item xs={6}>
+                            <Typography
+                              variant="h6"
+                              style={{ fontWeight: 600 }}
+                            >
+                              {label}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={6}>
+                            <Typography variant="h6">{content}</Typography>
+                          </Grid>
+                        </Grid>
+                        <Divider />
+                      </Box>
+                    );
+                  })}
+                  {/* <UpdateEducation tutor={data} /> */}
                 </Box>
               )}
             </Box>

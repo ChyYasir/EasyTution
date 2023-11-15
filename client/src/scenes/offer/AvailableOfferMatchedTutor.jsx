@@ -12,7 +12,7 @@ import {
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  useGetAvailableOfferQuery,
+  useGetOfferQuery,
   useUpdateMatchedTutorContactMutation,
   useUpdateOfferMutation,
 } from "../../state/api";
@@ -53,7 +53,7 @@ const AvailableOfferMatchedTutor = () => {
   // console.log(params.id);
   const theme = useTheme();
 
-  const { data, isLoading, isError } = useGetAvailableOfferQuery(params.id);
+  const { data, isLoading, isError } = useGetOfferQuery(params.id);
 
   // let [status, setStatus] = useState(""); // Update status
   let status = useRef(null);

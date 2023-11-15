@@ -11,6 +11,26 @@ const offerDetailsSchema = new mongoose.Schema({
   salary: Number,
   feePercentage: Number,
 });
+const reviewSchema = new mongoose.Schema({
+  offerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Offer",
+    required: true,
+  },
+  date: {
+    type: Date,
+    default: Date.now,
+  },
+  stars: {
+    type: Number,
+    min: 1,
+    max: 5,
+  },
+  feedback: {
+    type: String,
+    maxlength: 500, // You can adjust the maximum length as needed
+  },
+});
 const tutorSchema = new mongoose.Schema(
   {
     name: String,
@@ -37,6 +57,7 @@ const tutorSchema = new mongoose.Schema(
       default: 0,
     },
     confirmedOffers: [offerDetailsSchema], // List of confirmed offers with details
+    reviews: [reviewSchema],
   },
   { timestamps: true }
 );

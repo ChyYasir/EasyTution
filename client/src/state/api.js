@@ -1,7 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const api = createApi({
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:8080" }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: "http://localhost:8080",
+  }),
   reducerPath: "adminApi",
 
   endpoints: (builder) => ({
@@ -13,10 +15,17 @@ export const api = createApi({
       }),
     }),
     updateTutor: builder.mutation({
-      query: ({ id, updatedFields, offerDetails }) => ({
+      query: ({ id, updatedFields }) => ({
         url: `tutor/update/${id}`,
         method: "PUT",
-        body: { updatedFields, offerDetails },
+        body: updatedFields,
+      }),
+    }),
+    updateTutorProfile: builder.mutation({
+      query: ({ id, updatedFields }) => ({
+        url: `tutor/update/profile/${id}`,
+        method: "PUT",
+        body: updatedFields,
       }),
     }),
     getAllTutors: builder.query({
@@ -36,8 +45,8 @@ export const api = createApi({
         body: offer,
       }),
     }),
-    getAvailableOffer: builder.query({
-      query: (id) => `offer/getAvailableOffer/${id}`,
+    getOffer: builder.query({
+      query: (id) => `offer/getOffer/${id}`,
     }),
     deleteAvailableOffer: builder.mutation({
       query: (id) => ({
@@ -62,8 +71,15 @@ export const api = createApi({
     updateConfirmedOffer: builder.mutation({
       query: ({ id, status, feeAmount }) => ({
         url: `offer/confirm/update/${id}`,
-        method: "PUT", // or 'PATCH' based on your API
+        method: "PUT",
         body: { status, feeAmount },
+      }),
+    }),
+    updateReviews: builder.mutation({
+      query: ({ id, stars, feedback }) => ({
+        url: `offer/updateReviews/${id}`,
+        method: "PUT",
+        body: { stars, feedback },
       }),
     }),
     updateMatchedTutorContact: builder.mutation({
@@ -123,13 +139,15 @@ export const api = createApi({
 export const {
   useAddTutorMutation,
   useUpdateTutorMutation,
+  useUpdateTutorProfileMutation,
   useGetAllTutorsQuery,
   useGetTutorQuery,
   useAddOfferMutation,
-  useGetAvailableOfferQuery,
+  useGetOfferQuery,
   useDeleteAvailableOfferMutation,
   useUpdateOfferMutation,
   useUpdateConfirmedOfferMutation,
+  useUpdateReviewsMutation,
   useUpdateMatchedTutorContactMutation,
   useAddSubjectMutation,
   useGetAllSubjectsQuery,
