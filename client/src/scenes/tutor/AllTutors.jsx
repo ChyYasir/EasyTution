@@ -49,8 +49,14 @@ const AllTutors = () => {
       } else {
         setIsRefetching(true);
       }
-
-      const url = new URL("/tutor/getAllTutors", "http://localhost:8080");
+      const isProduction = true;
+      const url = new URL(
+        "/tutor/getAllTutors",
+        isProduction
+          ? "https://easy-tution-backend.onrender.com"
+          : "http://localhost:8080"
+      );
+      // const url = new URL("/tutor/getAllTutors", "http://localhost:8080");
       url.searchParams.set(
         "start",
         `${pagination.pageIndex * pagination.pageSize}`

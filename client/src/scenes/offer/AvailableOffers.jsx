@@ -92,8 +92,16 @@ const AvailableOffers = () => {
       } else {
         setIsRefetching(true);
       }
+      const isProduction = true;
 
-      const url = new URL("/offer/getAvailableOffers", "http://localhost:8080");
+      const url = new URL(
+        "/offer/getAvailableOffers",
+        isProduction
+          ? "https://easy-tution-backend.onrender.com"
+          : "http://localhost:8080"
+      );
+
+      // const url = new URL("/offer/getAvailableOffers", "http://localhost:8080");
       url.searchParams.set(
         "start",
         `${pagination.pageIndex * pagination.pageSize}`

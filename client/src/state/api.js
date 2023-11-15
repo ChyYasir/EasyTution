@@ -1,8 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+const isProduction = true;
 export const api = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:8080",
+    baseUrl: isProduction
+      ? "https://easy-tution-backend.onrender.com"
+      : "http://localhost:8080",
   }),
   reducerPath: "adminApi",
 
