@@ -19,6 +19,7 @@ import {
   MenuItem,
   Autocomplete,
   CircularProgress,
+  Rating,
 } from "@mui/material";
 import { PhotoCamera } from "@mui/icons-material";
 import { useTheme } from "@emotion/react";
@@ -687,13 +688,12 @@ const Profile = () => {
           height: "100vh",
         }}
       >
-        <Typography variant="h2" color="secondary">
-          LOADING
-        </Typography>
         <CircularProgress color="secondary" />
       </Box>
     );
   }
+
+  const averageStars = data.averageStars;
   return (
     <Container>
       <Grid container spacing={3}>
@@ -777,6 +777,13 @@ const Profile = () => {
               background: theme.palette.background.alt,
             }}
           >
+            <Rating
+              name="read-only"
+              value={averageStars}
+              readOnly
+              size="large"
+              precision={0.1}
+            />
             <Box sx={{ marginBottom: "1rem" }}>
               <div className="profile-head">
                 <Tabs

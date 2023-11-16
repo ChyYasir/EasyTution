@@ -623,7 +623,7 @@ export const updateReviews = async (req, res) => {
       date: new Date(),
     });
 
-    console.log({ offer });
+    // console.log({ offer });
     const tutor = await Tutor.findById(offer.assignedTutor);
 
     if (!tutor) {
@@ -636,6 +636,8 @@ export const updateReviews = async (req, res) => {
       feedback: feedback,
       date: new Date(),
     });
+    tutor.totalStars = tutor.totalStars + stars;
+    tutor.averageStars = tutor.totalStars / tutor.reviews.length;
     // Save the updated offer
     await offer.save();
     await tutor.save();

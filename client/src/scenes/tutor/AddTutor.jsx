@@ -48,11 +48,11 @@ const AddTutor = () => {
     formState: { errors },
   } = useForm();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const dispatch = useDispatch();
+
   const [addTutor] = useAddTutorMutation();
   const onSubmit = async (formData) => {
     setIsSubmitting(true);
-    console.log(formData);
+    // console.log(formData);
     try {
       await addTutor(formData).unwrap();
       alert("Tutor Added Successfully!!!");
@@ -74,16 +74,13 @@ const AddTutor = () => {
           height: "100vh",
         }}
       >
-        <Typography variant="h2" color="secondary">
-          LOADING
-        </Typography>
         <CircularProgress color="secondary" />
       </Box>
     );
   }
 
-  const subjects = allSubjects.map((subject) => subject.name);
-  const locations = allLocations.map((location) => location.name);
+  const subjects = allSubjects?.map((subject) => subject?.name);
+  const locations = allLocations?.map((location) => location?.name);
 
   return (
     <>
@@ -115,6 +112,9 @@ const AddTutor = () => {
                     fullWidth
                     error={!!errors.name}
                     helperText={errors.name ? errors.name.message : ""}
+                    InputLabelProps={{
+                      style: { color: theme.palette.secondary[100] },
+                    }}
                   />
                 )}
               />
@@ -138,6 +138,9 @@ const AddTutor = () => {
                     helperText={
                       errors.phoneNumber ? errors.phoneNumber.message : ""
                     }
+                    InputLabelProps={{
+                      style: { color: theme.palette.secondary[100] },
+                    }}
                   />
                 )}
               />
@@ -154,6 +157,9 @@ const AddTutor = () => {
                     label="Education Board"
                     variant="outlined"
                     fullWidth
+                    InputLabelProps={{
+                      style: { color: theme.palette.secondary[100] },
+                    }}
                   >
                     <MenuItem value="Cambridge">Cambridge</MenuItem>
                     <MenuItem value="Edexcel">Edexcel</MenuItem>
@@ -181,6 +187,9 @@ const AddTutor = () => {
                     fullWidth
                     error={!!errors.gender}
                     helperText={errors.gender ? errors.gender.message : ""}
+                    InputLabelProps={{
+                      style: { color: theme.palette.secondary[100] },
+                    }}
                   >
                     <MenuItem value="Male">Male</MenuItem>
                     <MenuItem value="Female">Female</MenuItem>
@@ -215,6 +224,9 @@ const AddTutor = () => {
                             ? errors.preferredSubjects.message
                             : ""
                         }
+                        InputLabelProps={{
+                          style: { color: theme.palette.secondary[100] },
+                        }}
                       />
                     )}
                   />
@@ -237,6 +249,9 @@ const AddTutor = () => {
                     helperText={
                       errors.upToClass ? errors.upToClass.message : ""
                     }
+                    InputLabelProps={{
+                      style: { color: theme.palette.secondary[100] },
+                    }}
                   />
                 )}
               />
@@ -266,6 +281,9 @@ const AddTutor = () => {
                             ? errors.preferredLocations.message
                             : ""
                         }
+                        InputLabelProps={{
+                          style: { color: theme.palette.secondary[100] },
+                        }}
                       />
                     )}
                   />

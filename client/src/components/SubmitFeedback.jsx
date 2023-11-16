@@ -22,6 +22,7 @@ import "slick-carousel/slick/slick-theme.css";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import Header from "./Header";
+import { useTheme } from "@emotion/react";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -43,6 +44,7 @@ const FormattedDate = ({ currentDate }) => {
   );
 };
 const SubmitFeedback = ({ offerId, offerInfo }) => {
+  const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [stars, setStars] = useState(0);
   const [feedback, setFeedback] = useState("");
@@ -76,7 +78,7 @@ const SubmitFeedback = ({ offerId, offerInfo }) => {
     infinite: true,
     speed: 500,
     slidesToShow: 1,
-    slidesToScroll: offerInfo.reviews.length - 1,
+    slidesToScroll: 1,
   };
 
   return (
@@ -115,7 +117,13 @@ const SubmitFeedback = ({ offerId, offerInfo }) => {
                   <Card variant="outlined">
                     <CardContent>
                       <FormattedDate currentDate={review.date} />
-                      <Rating name="read-only" value={review.stars} readOnly />
+                      <Rating
+                        name="read-only"
+                        value={review.stars}
+                        readOnly
+                        size="large"
+                        precision={0.1}
+                      />
                       <Typography variant="h3">{review.feedback}</Typography>
                     </CardContent>
                   </Card>
@@ -129,9 +137,11 @@ const SubmitFeedback = ({ offerId, offerInfo }) => {
           )}
           <DialogContent>
             <Box>
-              <Typography variant="subtitle1">Rate the tutor:</Typography>
+              <Typography variant="h5">Rate the tutor:</Typography>
               <Rating
                 value={stars}
+                precision={0.1}
+                size="large"
                 onChange={(event, newValue) => setStars(newValue)}
               />
             </Box>
@@ -143,6 +153,9 @@ const SubmitFeedback = ({ offerId, offerInfo }) => {
                 fullWidth
                 variant="outlined"
                 value={feedback}
+                InputLabelProps={{
+                  style: { color: theme.palette.secondary[100] },
+                }}
                 onChange={(e) => setFeedback(e.target.value)}
               />
             </Box>

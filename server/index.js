@@ -5,12 +5,26 @@ import cors from "cors";
 import dotenv from "dotenv";
 import helmet from "helmet";
 import morgan from "morgan";
+import { join } from "path";
+import { fileURLToPath } from "url";
+import path from "path";
+import { dirname } from "path";
 import tutorRoutes from "./routes/tutor.js";
 import offerRoutes from "./routes/offer.js";
 import systemRoutes from "./routes/system.js";
 /*CONFIGURATION*/
 dotenv.config();
 const app = express();
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = dirname(__filename);
+// // Serve static files from the 'build' directory inside the 'client' folder
+// app.use(express.static(path.join(__dirname, "client/build")));
+
+// // Handle requests to the '/*' route by serving the 'index.html' file
+// app.get("/*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "client/build/index.html"));
+// });
+
 app.use(express.json());
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));

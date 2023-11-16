@@ -56,6 +56,14 @@ const tutorSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    totalStars: {
+      type: Number,
+      default: 0,
+    },
+    averageStars: {
+      type: Number,
+      default: 0,
+    },
     confirmedOffers: [offerDetailsSchema], // List of confirmed offers with details
     reviews: [reviewSchema],
   },
