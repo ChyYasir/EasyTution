@@ -36,7 +36,23 @@ const MonthlySales = () => {
   }, [Data]); // eslint-disable-line react-hooks/exhaustive-deps
 
   console.log({ formattedData });
-
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Typography variant="h2" color="secondary">
+          LOADING
+        </Typography>
+        <CircularProgress color="secondary" />
+      </Box>
+    );
+  }
   return (
     <Box m="1.5rem 2.5rem">
       <Header title="MONTHLY SALES" subtitle="Chart of monthlysales" />
