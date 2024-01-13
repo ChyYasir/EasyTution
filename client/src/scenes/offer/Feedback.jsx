@@ -101,7 +101,7 @@ const Feedback = () => {
       } else {
         setIsRefetching(true);
       }
-      const isProduction = true;
+      const isProduction = false;
       const url = new URL(
         "/offer/feedbackOffers",
         isProduction

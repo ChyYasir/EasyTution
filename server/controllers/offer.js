@@ -1,10 +1,46 @@
 import Analytics from "../models/Analytics.js";
+import DailyData from "../models/DailyData.js";
 import Guardian from "../models/Guardian.js";
 import Location from "../models/Location.js";
 import MonthlyData from "../models/MonthlyData.js";
 import Offer from "../models/Offer.js";
 import Tutor from "../models/Tutor.js";
 
+const updateDailyData = async (status) => {
+  try {
+    let dailyData = await DailyData.findOne({
+      date: new Date().toISOString().split("T")[0],
+    });
+
+    if (!dailyData) {
+      dailyData = new DailyData({
+        date: new Date().toISOString().split("T")[0],
+        availableOffers: 0,
+        pendingOffers: 0,
+        confirmedOffers: 0,
+      });
+    }
+
+    switch (status) {
+      case "available":
+        dailyData.availableOffers += 1;
+        break;
+      case "pending":
+        dailyData.pendingOffers += 1;
+        break;
+      case "confirmed":
+        dailyData.confirmedOffers += 1;
+        break;
+      // Add more cases if needed
+      default:
+        break;
+    }
+
+    await dailyData.save();
+  } catch (error) {
+    console.error("Error updating daily data:", error);
+  }
+};
 export const addOffer = async (req, res) => {
   try {
     const offerData = req.body;
@@ -74,7 +110,7 @@ export const addOffer = async (req, res) => {
       location.save(),
       analytics.save(),
     ]);
-
+    await updateDailyData("available");
     res.status(201).json({ message: "Offer added successfully" });
   } catch (error) {
     console.error(error);
@@ -446,6 +482,7 @@ export const updateOffer = async (req, res) => {
 
     if (status) {
       offer.status = status;
+      await updateDailyData(offer.status);
     }
 
     if (status === "pending") {

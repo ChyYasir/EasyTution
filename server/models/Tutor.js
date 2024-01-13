@@ -66,6 +66,13 @@ const tutorSchema = new mongoose.Schema(
     },
     confirmedOffers: [offerDetailsSchema], // List of confirmed offers with details
     reviews: [reviewSchema],
+    availability: [
+      {
+        day: String,
+        startTime: String, // Consider using a time-specific data type for better validation
+        endTime: String,
+      },
+    ],
   },
   { timestamps: true }
 );

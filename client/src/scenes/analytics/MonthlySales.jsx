@@ -3,7 +3,10 @@ import { Box, CircularProgress, Typography, useTheme } from "@mui/material";
 import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 import { ResponsiveLine } from "@nivo/line";
 
-import { useGetMonthlyDataQuery } from "../../state/api";
+import {
+  useGetAvailableYearsQuery,
+  useGetMonthlyDataQuery,
+} from "../../state/api";
 import Header from "../../components/Header";
 
 const MonthlySales = () => {
@@ -11,7 +14,11 @@ const MonthlySales = () => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Initialize with the current year
 
   const { data: Data, error, isLoading } = useGetMonthlyDataQuery(selectedYear); // Use the selectedYear to fetch data
-
+  const {
+    data: availableYears,
+    isLoading: yearsLoading,
+    error: yearsError,
+  } = useGetAvailableYearsQuery();
   const handleChangeYear = (event) => {
     setSelectedYear(event.target.value);
   };
@@ -59,10 +66,17 @@ const MonthlySales = () => {
       <FormControl>
         <InputLabel>Year</InputLabel>
         <Select value={selectedYear} onChange={handleChangeYear}>
-          {/* Add options for the years you want to make available */}
-          <MenuItem value={2023}>2023</MenuItem>
-          <MenuItem value={2022}>2022</MenuItem>
-          {/* Add more years as needed */}
+          {yearsLoading ? (
+            <MenuItem value="">Loading years...</MenuItem>
+          ) : yearsError ? (
+            <MenuItem value="">Error fetching years</MenuItem>
+          ) : (
+            availableYears.map((year) => (
+              <MenuItem key={year} value={year}>
+                {year}
+              </MenuItem>
+            ))
+          )}
         </Select>
       </FormControl>
       <Box height="80vh">

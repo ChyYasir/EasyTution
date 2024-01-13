@@ -12,6 +12,7 @@ import { dirname } from "path";
 import tutorRoutes from "./routes/tutor.js";
 import offerRoutes from "./routes/offer.js";
 import systemRoutes from "./routes/system.js";
+import guardianRoutes from "./routes/guardian.js";
 /*CONFIGURATION*/
 dotenv.config();
 const app = express();
@@ -42,7 +43,7 @@ app.use(
 app.use("/tutor", tutorRoutes);
 app.use("/offer", offerRoutes);
 app.use("/system", systemRoutes);
-
+app.use("/guardian", guardianRoutes);
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 9000;
 mongoose

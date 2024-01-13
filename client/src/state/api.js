@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const isProduction = true;
+const isProduction = false;
 export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: isProduction
@@ -133,6 +133,30 @@ export const api = createApi({
     getMonthlyData: builder.query({
       query: (year) => `system/monthlyData/get/${year}`,
     }),
+    getAvailableYears: builder.query({
+      query: () => `system/getAvailableYears`,
+    }),
+    getDailyDataByDateRange: builder.query({
+      // query: ({ startDate, endDate }) => {
+      //   console.log("Query parameters:", startDate, endDate);
+      //   const params = new URLSearchParams();
+      //   params.append("startDate", startDate);
+      //   params.append("endDate", endDate);
+
+      //   return {
+      //     url: `system/dailyData?${params.toString()}`,
+      //   };
+      // },
+
+      query: ({ startDate, endDate }) => ({
+        url: `system/dailyData/${startDate}/${endDate}`,
+        method: "GET",
+        // params: { startDate, endDate },
+      }),
+
+      // query: ({ startDate, endDate }) =>
+      //   `system/dailyData/${startDate}/${endDate}`,
+    }),
     getAnalytics: builder.query({
       query: () => "system/analytics/get",
     }),
@@ -160,5 +184,7 @@ export const {
   useDeleteLocationMutation,
   useUpdateLocationMutation,
   useGetMonthlyDataQuery,
+  useGetAvailableYearsQuery,
+  useGetDailyDataByDateRangeQuery,
   useGetAnalyticsQuery,
 } = api;

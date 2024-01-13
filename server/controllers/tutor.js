@@ -211,3 +211,39 @@ export const updateTutorProfileInfo = async (req, res) => {
     res.status(500).json({ error: "Error updating tutor" });
   }
 };
+export const getTutorAvailability = async (req, res) => {
+  try {
+    const tutorId = req.params.id;
+    const tutor = await Tutor.findById(tutorId);
+
+    if (!tutor) {
+      return res.status(404).json({ error: "Tutor not found" });
+    }
+
+    res.json(tutor.availability);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+export const updateTutorAvailability = async (req, res) => {
+  try {
+    const tutorId = req.params.id;
+    const updatedAvailability = req.body;
+
+    const tutor = await Tutor.findByIdAndUpdate(
+      tutorId,
+      { $set: { availability: updatedAvailability } },
+      { new: true }
+    );
+
+    if (!tutor) {
+      return res.status(404).json({ error: "Tutor not found" });
+    }
+
+    res.json(tutor);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};

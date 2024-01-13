@@ -1,7 +1,9 @@
 import Analytics from "../models/Analytics.js";
+import DailyData from "../models/DailyData.js";
 import Location from "../models/Location.js";
 import MonthlyData from "../models/MonthlyData.js";
 import Subject from "../models/Subject.js";
+import dayjs from "dayjs";
 
 export const addSubject = async (req, res) => {
   try {
@@ -165,17 +167,56 @@ export const getAnalytics = async (req, res) => {
 export const getMonthlyDataByYear = async (req, res) => {
   try {
     const year = req.params.year;
-    const monthlyData = await MonthlyData.findOne({ year }).exec();
 
-    if (!monthlyData) {
-      return res
-        .status(404)
-        .json({ error: "Monthly data not found for the year." });
-    }
+    // Find existing data or create a new entry for the year
+    const monthlyData = await MonthlyData.findOneAndUpdate(
+      { year },
+      {
+        $setOnInsert: { year }, // Set initial values for new entries
+      },
+      { new: true, upsert: true } // Create a new document if not found
+    );
 
-    res.status(200).json(monthlyData);
+    res.status(200).json(monthlyData); // Return the existing or newly created data
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Failed to fetch monthly data." });
+    res.status(500).json({ error: "Failed to fetch or create monthly data." });
+  }
+};
+
+export const getAvailableYears = async (req, res) => {
+  try {
+    const years = await MonthlyData.distinct("year");
+    res.status(200).json(years);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch available years." });
+  }
+};
+export const getDailyDataByDateRange = async (req, res) => {
+  try {
+    const { startDate, endDate } = req.params;
+
+    // Parse the dates using dayjs
+    const parsedStartDate = dayjs(startDate).startOf("day").toDate();
+    const parsedEndDate = dayjs(endDate).endOf("day").toDate();
+
+    console.log(
+      "Parsed start date:",
+      parsedStartDate,
+      "Parsed end date:",
+      parsedEndDate
+    );
+
+    const dailyDataInRange = await DailyData.find({
+      date: { $gte: parsedStartDate, $lte: parsedEndDate },
+    });
+
+    console.log("Fetched daily data:", dailyDataInRange);
+
+    res.json(dailyDataInRange);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch daily data range" });
   }
 };

@@ -33,6 +33,7 @@ import {
 } from "../../state/api";
 import { Controller, useForm } from "react-hook-form";
 import Header from "../../components/Header";
+import AvailabilitySchedule from "./AvailabilitySchedule";
 
 const UpdateProfile = ({ tutor }) => {
   const { data: allSubjects, isLoading: LoadingSubjects } =
@@ -828,6 +829,18 @@ const Profile = () => {
                           : theme.palette.secondary[600],
                     }}
                   />
+                  <Tab
+                    label="Schedule"
+                    sx={{
+                      fontWeight: "bold",
+                    }}
+                    style={{
+                      color:
+                        value === 3
+                          ? theme.palette.secondary[300]
+                          : theme.palette.secondary[600],
+                    }}
+                  />
                 </Tabs>
               </div>
             </Box>
@@ -917,6 +930,11 @@ const Profile = () => {
                     );
                   })}
                   {/* <UpdateEducation tutor={data} /> */}
+                </Box>
+              )}
+              {value === 3 && (
+                <Box>
+                  <AvailabilitySchedule tutor={data} />
                 </Box>
               )}
             </Box>

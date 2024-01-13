@@ -22,7 +22,7 @@ function HeaderCell({ column }) {
     </>
   );
 }
-const AllTutors = () => {
+const AllGuardians = () => {
   const navigate = useNavigate();
   //data and fetching state
   const [data, setData] = useState([]);
@@ -51,12 +51,12 @@ const AllTutors = () => {
       }
       const isProduction = false;
       const url = new URL(
-        "/tutor/getAllTutors",
+        "/guardian/getAllGuardians",
         isProduction
           ? "https://easy-tution-backend.onrender.com"
           : "http://localhost:8080"
       );
-      // const url = new URL("/tutor/getAllTutors", "http://localhost:8080");
+      // const url = new URL("/tutor/getAllGuardians", "http://localhost:8080");
       url.searchParams.set(
         "start",
         `${pagination.pageIndex * pagination.pageSize}`
@@ -132,32 +132,6 @@ const AllTutors = () => {
         accessorKey: "educationBoard",
         header: "Education Board",
         Header: ({ column }) => <HeaderCell column={column} />,
-      },
-      {
-        accessorKey: "createdAt",
-        header: "Create Time",
-        Header: ({ column }) => <HeaderCell column={column} />,
-        Cell: ({ cell }) => {
-          const createdAtDate = new Date(cell.getValue());
-          const date = createdAtDate.toLocaleDateString();
-          const time = createdAtDate.toLocaleTimeString();
-          return (
-            <>
-              <Box
-                sx={{
-                  cursor: "pointer",
-                  // backgroundColor: "red",
-                }}
-                onClick={() => {
-                  console.log(cell.getValue());
-                }}
-              >
-                <Typography>{date}</Typography>
-                <Typography>{time}</Typography>
-              </Box>
-            </>
-          );
-        },
       },
       {
         accessorKey: "preferredSubjects",
@@ -301,4 +275,4 @@ const AllTutors = () => {
   );
 };
 
-export default AllTutors;
+export default AllGuardians;

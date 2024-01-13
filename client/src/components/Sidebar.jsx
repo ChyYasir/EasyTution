@@ -82,6 +82,15 @@ const navItems = [
     icon: <TodayOutlined />,
   },
   {
+    text: "GUARDIAN MANAGEMENT",
+    icon: null,
+  },
+  {
+    text: "All Guardians",
+    url: "allguardians",
+    icon: <TodayOutlined />,
+  },
+  {
     text: "SYSTEM MANAGEMENT",
     icon: null,
   },
@@ -107,6 +116,11 @@ const navItems = [
   {
     text: "Monthly Sales",
     url: "monthlysales",
+    icon: <TrendingUpOutlined />,
+  },
+  {
+    text: "Daily Analytics",
+    url: "dailyanalytics",
     icon: <TrendingUpOutlined />,
   },
 ];

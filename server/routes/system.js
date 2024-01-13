@@ -8,6 +8,8 @@ import {
   getAllLocations,
   getAllSubjects,
   getAnalytics,
+  getAvailableYears,
+  getDailyDataByDateRange,
   getMonthlyDataByYear,
   updateLocation,
 } from "../controllers/system.js";
@@ -24,5 +26,7 @@ router
   .put("/location/update/:id", updateLocation)
   .post("/analytics/add", addAnalytics)
   .get("/analytics/get", getAnalytics)
-  .get("/monthlyData/get/:year", getMonthlyDataByYear);
+  .get("/monthlyData/get/:year", getMonthlyDataByYear)
+  .get("/getAvailableYears", getAvailableYears)
+  .get("/dailyData/:startDate/:endDate", getDailyDataByDateRange);
 export default router;

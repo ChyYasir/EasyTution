@@ -20,6 +20,7 @@ import AllLocations from "./scenes/system/AllLocations";
 import OfferVLocation from "./scenes/analytics/OfferVLocation";
 import Feedback from "./scenes/offer/Feedback";
 import MonthlySales from "./scenes/analytics/MonthlySales";
+import DailyAnalytics from "./scenes/analytics/DailyAnalytics";
 
 function App() {
   const mode = useSelector((state) => state.global.mode);
@@ -49,6 +50,7 @@ function App() {
               <Route path="/alllocations" element={<AllLocations />} />
               <Route path="/offervslocation" element={<OfferVLocation />} />
               <Route path="/monthlysales" element={<MonthlySales />} />
+              <Route path="/dailyanalytics" element={<DailyAnalytics />} />
             </Route>
           </Routes>
         </ThemeProvider>

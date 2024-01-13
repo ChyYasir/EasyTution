@@ -15,6 +15,12 @@ const guardianSchema = new mongoose.Schema({
       ref: "Offer",
     },
   ],
+  tutor: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Tutor",
+    },
+  ],
 });
 
 const Guardian = mongoose.model("Guardian", guardianSchema);
