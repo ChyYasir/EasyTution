@@ -480,17 +480,46 @@ export const updateOffer = async (req, res) => {
     const location = await Location.findOne({ name: offer.location[0] });
     const analytics = await Analytics.findOne({ name: "analytics" });
 
+    // Find or create MonthlyData for the current year
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.toLocaleString("default", {
+      month: "long",
+    });
+    let monthlyData = await MonthlyData.findOne({ year: currentYear });
+
+    if (!monthlyData) {
+      monthlyData = new MonthlyData({ year: currentYear, monthlyData: [] });
+    }
+
+    // Get the month data for the current month, or create a new one
+    let monthData = monthlyData.monthlyData.find(
+      (md) => md.month === currentMonth
+    );
+    if (!monthData) {
+      monthData = {
+        month: currentMonth,
+        totalFeeTaken: 0,
+        confirmedOffers: 0,
+        pendingOffers: 0,
+        maleTutors: 0,
+        femaleTutors: 0,
+      };
+      monthlyData.monthlyData.push(monthData);
+    }
     if (status) {
       offer.status = status;
       await updateDailyData(offer.status);
     }
 
     if (status === "pending") {
+      monthData.pendingOffers += 1;
       location.availableOfferCount = location.availableOfferCount - 1;
       analytics.numberOfAvailableOffers = analytics.numberOfAvailableOffers - 1;
       analytics.numberOfPendingOffers = analytics.numberOfPendingOffers + 1;
     }
     if (status === "confirmed") {
+      monthData.confirmedOffers += 1;
       offer.startDate = new Date();
       offer.feePercentage = feePercentage;
       const tutor = await Tutor.findById(assignedTutor);
@@ -523,7 +552,12 @@ export const updateOffer = async (req, res) => {
     }
     offer.assignedTutor = assignedTutor;
 
-    await Promise.all([offer.save(), analytics.save(), location.save()]);
+    await Promise.all([
+      monthlyData.save(),
+      offer.save(),
+      analytics.save(),
+      location.save(),
+    ]);
     res.json({ message: "Offer updated successfully", offer });
   } catch (error) {
     console.error(error);

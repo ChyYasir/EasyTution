@@ -31,6 +31,16 @@ const DailyAnalytics = () => {
     endDate,
   });
   console.log({ dailyData });
+  const [formattedData] = useMemo(() => {
+    if (!dailyData) return [];
+
+    const formattedData = dailyData.map((item) => ({
+      ...item,
+      date: dayjs(item.date).format("MM-DD-YYYY"), // Apply desired format
+    }));
+    return [formattedData];
+  }, [dailyData]);
+  console.log({ formattedData });
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -60,7 +70,11 @@ const DailyAnalytics = () => {
       </LocalizationProvider>
 
       {/* Render your BarChart component with dailyData */}
-      <BarChart data={dailyData} />
+      <BarChart
+        data={formattedData}
+        keys={["availableOffers", "confirmedOffers", "pendingOffers"]}
+        indexby="date"
+      />
     </Box>
   );
 };

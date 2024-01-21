@@ -114,7 +114,7 @@ const navItems = [
     icon: <TrendingUpOutlined />,
   },
   {
-    text: "Monthly Sales",
+    text: "Monthly Analytics",
     url: "monthlysales",
     icon: <TrendingUpOutlined />,
   },

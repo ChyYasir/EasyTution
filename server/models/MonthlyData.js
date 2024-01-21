@@ -10,6 +10,10 @@ const monthlyDataSchema = new mongoose.Schema({
     {
       month: String,
       totalFeeTaken: Number,
+      confirmedOffers: { type: Number, default: 0 },
+      pendingOffers: { type: Number, default: 0 },
+      maleTutors: { type: Number, default: 0 },
+      femaleTutors: { type: Number, default: 0 },
     },
   ],
 });

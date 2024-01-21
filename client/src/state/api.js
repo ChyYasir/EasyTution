@@ -133,6 +133,9 @@ export const api = createApi({
     getMonthlyData: builder.query({
       query: (year) => `system/monthlyData/get/${year}`,
     }),
+    getDemoClassSuccessRate: builder.query({
+      query: (year) => `system/demoClassSuccessRate/${year}`,
+    }),
     getAvailableYears: builder.query({
       query: () => `system/getAvailableYears`,
     }),
@@ -184,6 +187,7 @@ export const {
   useDeleteLocationMutation,
   useUpdateLocationMutation,
   useGetMonthlyDataQuery,
+  useGetDemoClassSuccessRateQuery,
   useGetAvailableYearsQuery,
   useGetDailyDataByDateRangeQuery,
   useGetAnalyticsQuery,

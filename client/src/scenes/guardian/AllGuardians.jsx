@@ -119,23 +119,24 @@ const AllGuardians = () => {
         },
       },
       {
-        accessorKey: "name",
+        accessorKey: "guardianName",
         header: "Name",
         Header: ({ column }) => <HeaderCell column={column} />,
       },
       {
-        accessorKey: "phoneNumber",
+        accessorKey: "guardianPhoneNumber",
         header: "Phone Number",
         Header: ({ column }) => <HeaderCell column={column} />,
       },
+
       {
-        accessorKey: "educationBoard",
-        header: "Education Board",
+        accessorKey: "address",
+        header: "Address",
         Header: ({ column }) => <HeaderCell column={column} />,
       },
       {
-        accessorKey: "preferredSubjects",
-        header: "Preferred Subjects",
+        accessorKey: "offerList",
+        header: "Number of Offers",
         Header: ({ column }) => <HeaderCell column={column} />,
         Cell: ({ cell }) => {
           // return <div onClick={() => ></div>,
@@ -150,25 +151,35 @@ const AllGuardians = () => {
                   console.log(cell.getValue());
                 }}
               >
-                {cell.getValue().join(",")}
+                {cell.getValue().length}
               </Box>
             </>
           );
         },
       },
       {
-        accessorKey: "gender",
-        header: "Gender",
+        accessorKey: "tutor",
+        header: "Tutor",
         Header: ({ column }) => <HeaderCell column={column} />,
-        muiTableBodyCellProps: ({ cell }) => ({
-          sx: {
-            backgroundColor:
-              cell.getValue() === "Male" ? "rgba(22, 184, 44, 0.5)" : undefined,
-            // fontWeight: cell.column.id === 'age' && cell.getValue<number>() > 40 ? '700' : '400'
-          },
-        }),
+        Cell: ({ cell }) => {
+          // return <div onClick={() => ></div>,
+          return (
+            <>
+              <Box
+                sx={{
+                  cursor: "pointer",
+                  // backgroundColor: "red",
+                }}
+                onClick={() => {
+                  console.log(cell.getValue());
+                }}
+              >
+                {cell.getValue()}
+              </Box>
+            </>
+          );
+        },
       },
-
       //end
     ],
     []

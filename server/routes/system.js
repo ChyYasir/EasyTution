@@ -10,6 +10,7 @@ import {
   getAnalytics,
   getAvailableYears,
   getDailyDataByDateRange,
+  getDemoClassSuccessRate,
   getMonthlyDataByYear,
   updateLocation,
 } from "../controllers/system.js";
@@ -28,5 +29,6 @@ router
   .get("/analytics/get", getAnalytics)
   .get("/monthlyData/get/:year", getMonthlyDataByYear)
   .get("/getAvailableYears", getAvailableYears)
-  .get("/dailyData/:startDate/:endDate", getDailyDataByDateRange);
+  .get("/dailyData/:startDate/:endDate", getDailyDataByDateRange)
+  .get("/demoClassSuccessRate/:year", getDemoClassSuccessRate);
 export default router;

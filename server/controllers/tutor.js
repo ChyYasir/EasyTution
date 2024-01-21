@@ -1,3 +1,4 @@
+import MonthlyData from "../models/MonthlyData.js";
 import Offer from "../models/Offer.js";
 import Tutor from "../models/Tutor.js";
 
@@ -34,6 +35,40 @@ export const addTutor = async (req, res) => {
       });
       await offer.save();
     });
+
+    // Find or create MonthlyData for the current year
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.toLocaleString("default", {
+      month: "long",
+    });
+    let monthlyData = await MonthlyData.findOne({ year: currentYear });
+
+    if (!monthlyData) {
+      monthlyData = new MonthlyData({ year: currentYear, monthlyData: [] });
+    }
+
+    // Get the month data for the current month, or create a new one
+    let monthData = monthlyData.monthlyData.find(
+      (md) => md.month === currentMonth
+    );
+    if (!monthData) {
+      monthData = {
+        month: currentMonth,
+        totalFeeTaken: 0,
+        confirmedOffers: 0,
+        pendingOffers: 0,
+        maleTutors: 0,
+        femaleTutors: 0,
+      };
+      monthlyData.monthlyData.push(monthData);
+    }
+    if (newTutor.gender === "Male") {
+      monthData.maleTutors++;
+    } else {
+      monthData.femaleTutors++;
+    }
+    await monthlyData.save();
 
     // Wait for all updates to complete
     await Promise.all(updatePromises);

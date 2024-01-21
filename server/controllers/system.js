@@ -183,6 +183,28 @@ export const getMonthlyDataByYear = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch or create monthly data." });
   }
 };
+export const getDemoClassSuccessRate = async (req, res) => {
+  try {
+    const year = req.params.year;
+    const monthlyData = await MonthlyData.findOne({ year });
+    if (!monthlyData) {
+      return res.status(404).json({ error: "Data not found for this year." });
+    }
+
+    const successRates = monthlyData.monthlyData.map((monthData) => ({
+      month: monthData.month,
+      successRate:
+        monthData.pendingOffers > 0
+          ? monthData.confirmedOffers / monthData.pendingOffers
+          : 0,
+    }));
+
+    res.status(200).json(successRates);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
 
 export const getAvailableYears = async (req, res) => {
   try {
