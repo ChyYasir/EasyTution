@@ -674,8 +674,12 @@ const Profile = () => {
       content: `${data?.notConfirmedOffersCount}`,
     },
     {
-      label: "Number of Not Confirmed offers",
-      content: `${data?.confirmedOffers}`,
+      label: "Confirmed offers",
+      content: data?.confirmedOffers.map((offer, index) => (
+        <Typography key={index} variant="h6">
+          {offer._id}
+        </Typography>
+      )),
     },
   ];
 
@@ -905,30 +909,29 @@ const Profile = () => {
               )}
               {value === 2 && (
                 <Box>
-                  {statsInfo.map(({ label, content }) => {
-                    return (
-                      <Box>
-                        <Grid
-                          container
-                          spacing={2}
-                          sx={{ marginBottom: "0.5rem" }}
-                        >
-                          <Grid item xs={6}>
-                            <Typography
-                              variant="h6"
-                              style={{ fontWeight: 600 }}
-                            >
-                              {label}
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={6}>
-                            <Typography variant="h6">{content}</Typography>
-                          </Grid>
+                  {statsInfo.map(({ label, content }) => (
+                    <Box key={label}>
+                      <Grid
+                        container
+                        spacing={2}
+                        sx={{ marginBottom: "0.5rem" }}
+                      >
+                        <Grid item xs={6}>
+                          <Typography variant="h6" style={{ fontWeight: 600 }}>
+                            {label}
+                          </Typography>
                         </Grid>
-                        <Divider />
-                      </Box>
-                    );
-                  })}
+                        <Grid item xs={6}>
+                          {Array.isArray(content) ? (
+                            content
+                          ) : (
+                            <Typography variant="h6">{content}</Typography>
+                          )}
+                        </Grid>
+                      </Grid>
+                      <Divider />
+                    </Box>
+                  ))}
                   {/* <UpdateEducation tutor={data} /> */}
                 </Box>
               )}
