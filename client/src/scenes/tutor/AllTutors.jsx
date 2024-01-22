@@ -49,7 +49,7 @@ const AllTutors = () => {
       } else {
         setIsRefetching(true);
       }
-      const isProduction = false;
+      const isProduction = true;
       const url = new URL(
         "/tutor/getAllTutors",
         isProduction

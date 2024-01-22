@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const isProduction = false;
+const isProduction = true;
 export const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: isProduction

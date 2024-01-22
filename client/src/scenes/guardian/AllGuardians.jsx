@@ -49,7 +49,7 @@ const AllGuardians = () => {
       } else {
         setIsRefetching(true);
       }
-      const isProduction = false;
+      const isProduction = true;
       const url = new URL(
         "/guardian/getAllGuardians",
         isProduction

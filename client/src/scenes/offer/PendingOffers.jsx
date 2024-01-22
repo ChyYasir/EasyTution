@@ -142,7 +142,7 @@ const PendingOffers = () => {
       } else {
         setIsRefetching(true);
       }
-      const isProduction = false;
+      const isProduction = true;
       const url = new URL(
         "/offer/getPendingOffers",
         isProduction
