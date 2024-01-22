@@ -31,6 +31,27 @@ const reviewSchema = new mongoose.Schema({
     maxlength: 500, // You can adjust the maximum length as needed
   },
 });
+const timeSlotSchema = new mongoose.Schema({
+  startTime: String, // Consider using a time-specific format
+  endTime: String,
+});
+
+const availabilitySchema = new mongoose.Schema({
+  day: {
+    type: String,
+    enum: [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ],
+    required: true,
+  },
+  timeSlots: [timeSlotSchema],
+});
 const tutorSchema = new mongoose.Schema(
   {
     name: String,
@@ -66,13 +87,7 @@ const tutorSchema = new mongoose.Schema(
     },
     confirmedOffers: [offerDetailsSchema], // List of confirmed offers with details
     reviews: [reviewSchema],
-    availability: [
-      {
-        day: String,
-        startTime: String, // Consider using a time-specific data type for better validation
-        endTime: String,
-      },
-    ],
+    availability: [availabilitySchema],
   },
   { timestamps: true }
 );

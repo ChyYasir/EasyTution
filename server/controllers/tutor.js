@@ -1,3 +1,4 @@
+import Analytics from "../models/Analytics.js";
 import MonthlyData from "../models/MonthlyData.js";
 import Offer from "../models/Offer.js";
 import Tutor from "../models/Tutor.js";
@@ -63,12 +64,16 @@ export const addTutor = async (req, res) => {
       };
       monthlyData.monthlyData.push(monthData);
     }
+    const analytics = await Analytics.findOne({ name: "analytics" });
     if (newTutor.gender === "Male") {
       monthData.maleTutors++;
+      analytics.numberOfMaleTutors++;
     } else {
       monthData.femaleTutors++;
+      analytics.numberOfFemaleTutors++;
     }
     await monthlyData.save();
+    await analytics.save();
 
     // Wait for all updates to complete
     await Promise.all(updatePromises);
@@ -246,39 +251,51 @@ export const updateTutorProfileInfo = async (req, res) => {
     res.status(500).json({ error: "Error updating tutor" });
   }
 };
+// Function to get a tutor's availability
 export const getTutorAvailability = async (req, res) => {
   try {
-    const tutorId = req.params.id;
+    const tutorId = req.params.tutorId;
     const tutor = await Tutor.findById(tutorId);
 
     if (!tutor) {
-      return res.status(404).json({ error: "Tutor not found" });
+      return res.status(404).json({ message: "Tutor not found" });
     }
 
-    res.json(tutor.availability);
+    res.status(200).json(tutor.availability);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Server error" });
+    console.error({ error });
+    res.status(500).json({ message: "Error fetching availability" });
   }
 };
+
+// Function to update a tutor's availability
 export const updateTutorAvailability = async (req, res) => {
   try {
-    const tutorId = req.params.id;
-    const updatedAvailability = req.body;
+    const tutorId = req.params.tutorId;
+    const availability = req.body;
+    console.log("Tutor ID:", tutorId);
+    console.log(availability);
+    console.log("Received Availability:", JSON.stringify(req.body, null, 2));
+
+    // Ensure that availability is an array of objects
+    if (!Array.isArray(availability)) {
+      return res.status(400).json({ message: "Invalid availability format" });
+    }
 
     const tutor = await Tutor.findByIdAndUpdate(
       tutorId,
-      { $set: { availability: updatedAvailability } },
+      { $set: { availability } },
       { new: true }
     );
 
     if (!tutor) {
-      return res.status(404).json({ error: "Tutor not found" });
+      console.log("Tutor not found");
+      return res.status(404).json({ message: "Tutor not found" });
     }
 
-    res.json(tutor);
+    res.status(200).json(tutor.availability);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Server error" });
+    console.error({ error });
+    res.status(500).json({ message: "Error updating availability" });
   }
 };

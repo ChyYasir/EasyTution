@@ -65,7 +65,7 @@ export const addOffer = async (req, res) => {
         analytics.numberOfRepeatedGuardians + 1;
     }
     const newOffer = new Offer(offerData);
-
+    guardian.numberOfOffers = guardian.numberOfOffers + 1;
     const matchedTutors = await Tutor.find({
       $and: [
         // Location matching

@@ -32,6 +32,14 @@ const analyticsSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  numberOfMaleTutors: {
+    type: Number,
+    default: 0,
+  },
+  numberOfFemaleTutors: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const Analytics = mongoose.model("Analytics", analyticsSchema);

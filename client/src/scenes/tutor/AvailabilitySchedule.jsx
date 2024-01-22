@@ -1,21 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { Box, Button, Grid, TextField, Typography } from "@mui/material";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Box,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-} from "@mui/material";
-import Header from "../../components/Header";
+  useUpdateTutorAvailabilityMutation,
+  useGetTutorAvailabilityQuery,
+} from "../../state/api";
 
 const daysOfWeek = [
   "Sunday",
@@ -27,127 +18,101 @@ const daysOfWeek = [
   "Saturday",
 ];
 
-const AvailabilitySchedule = ({ tutor, onSaveAvailability }) => {
-  const [editingSlot, setEditingSlot] = useState(null);
-  const [isOpenDialog, setIsOpenDialog] = useState(false);
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
-  const [day, setDay] = useState("");
-  const [slot, setSlot] = useState(null);
-
-  // Ensure `tutor.availability` is defined before using `some`
-  const availability = tutor?.availability || [];
-
-  // Update tutor availability with edited slot
-  const saveAvailability = () => {
-    const newAvailability = [...availability];
-    if (editingSlot) {
-      newAvailability[editingSlot] = {
-        day: editingSlot.day,
-        startTime,
-        endTime,
-      };
-    } else {
-      newAvailability.push({
-        day,
-        startTime,
-        endTime,
+const AvailabilitySchedule = ({ tutorId }) => {
+  const [availability, setAvailability] = useState({});
+  const [updateAvailability] = useUpdateTutorAvailabilityMutation();
+  const { data: fetchedAvailability, isLoading } =
+    useGetTutorAvailabilityQuery(tutorId);
+  console.log({ fetchedAvailability });
+  useEffect(() => {
+    if (fetchedAvailability) {
+      const availabilityObject = {};
+      fetchedAvailability.forEach(({ day, timeSlots }) => {
+        availabilityObject[day] = timeSlots;
       });
+      console.log({ availabilityObject });
+      setAvailability(availabilityObject);
     }
-    onSaveAvailability(newAvailability);
+  }, [fetchedAvailability]);
+
+  const handleTimeChange = (day, slotIndex, type) => (newValue) => {
+    setAvailability({
+      ...availability,
+      [day]: availability[day].map((slot, index) =>
+        index === slotIndex ? { ...slot, [type]: newValue } : slot
+      ),
+    });
   };
 
-  const handleEditSlot = (selectedDay, selectedSlot) => {
-    setDay(selectedDay);
-    setSlot(selectedSlot);
-    setEditingSlot(selectedSlot);
-    setStartTime(selectedSlot.startTime);
-    setEndTime(selectedSlot.endTime);
-    setIsOpenDialog(true);
+  const addTimeSlot = (day) => {
+    const newSlot = { startTime: null, endTime: null };
+    setAvailability({
+      ...availability,
+      [day]: [...(availability[day] || []), newSlot],
+    });
   };
 
-  const handleCloseDialog = () => {
-    setEditingSlot(null);
-    setIsOpenDialog(false);
+  const handleSubmit = async () => {
+    // Transform the availability object into the expected array format
+    const availabilityArray = Object.entries(availability).map(
+      ([day, timeSlots]) => ({
+        day,
+        timeSlots,
+      })
+    );
+
+    try {
+      await updateAvailability({
+        tutorId,
+        availability: availabilityArray,
+      }).unwrap();
+      alert("Availability updated successfully");
+    } catch (error) {
+      console.error("Error updating availability:", error);
+    }
   };
+
+  if (isLoading) {
+    return <p>Loading...</p>; // Or any loading spinner
+  }
 
   return (
-    <TableContainer component={Paper}>
-      <Table style={{ minWidth: 500 }} aria-label="Availability Schedule">
-        <TableHead>
-          <TableRow>
-            <TableCell></TableCell>
-            {daysOfWeek.map((day, index) => (
-              <TableCell key={index}>{day}</TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {[...Array(24).keys()].map((hour) => (
-            <TableRow key={hour}>
-              <TableCell>{`${hour}:00 - ${hour + 1}:00`}</TableCell>
-              {daysOfWeek.map((day, dayIndex) => (
-                <TableCell key={dayIndex}>
-                  {availability.some(
-                    (slot) =>
-                      slot.day === day &&
-                      slot.startTime <= hour &&
-                      slot.endTime > hour
-                  ) ? (
-                    <Box
-                      sx={{ backgroundColor: "#66ff66" }}
-                      onClick={() => handleEditSlot(day, { ...slot })}
-                    >
-                      {editingSlot &&
-                        editingSlot.day === day &&
-                        editingSlot.startTime === hour && (
-                          <Button onClick={handleCloseDialog}>X</Button>
-                        )}
-                    </Box>
-                  ) : (
-                    <Box
-                      onClick={() =>
-                        handleEditSlot(day, {
-                          day,
-                          startTime: hour,
-                          endTime: hour + 1,
-                        })
-                      }
-                    >
-                      +
-                    </Box>
-                  )}
-                </TableCell>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Box sx={{ m: 2 }}>
+        <Grid container spacing={2}>
+          {daysOfWeek.map((day) => (
+            <Grid item xs={12} key={day}>
+              <Typography variant="h6">{day}</Typography>
+              {(availability[day] || []).map((slot, index) => (
+                <Box key={index} sx={{ display: "flex", gap: 2, mb: 1 }}>
+                  <TimePicker
+                    label="Start Time"
+                    value={slot.startTime}
+                    onChange={handleTimeChange(day, index, "startTime")}
+                    renderInput={(params) => <TextField {...params} />}
+                  />
+                  <TimePicker
+                    label="End Time"
+                    value={slot.endTime}
+                    onChange={handleTimeChange(day, index, "endTime")}
+                    renderInput={(params) => <TextField {...params} />}
+                  />
+                </Box>
               ))}
-            </TableRow>
+              <Button onClick={() => addTimeSlot(day)}>Add Time Slot</Button>
+            </Grid>
           ))}
-        </TableBody>
-      </Table>
-      <Box>
-        <Dialog sx={{ p: 3 }} open={isOpenDialog} onClose={handleCloseDialog}>
-          {/* <DialogTitle>Edit Availability Slot</DialogTitle> */}
-
-          <Header title="Edit Availability Slot" />
-          <DialogContent sx={{ pt: 2 }}>
-            {/* Add spacing here */}
-            <TextField
-              label="Start Time"
-              value={startTime}
-              onChange={(e) => setStartTime(e.target.value)}
-            />
-            <TextField
-              label="End Time"
-              value={endTime}
-              onChange={(e) => setEndTime(e.target.value)}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseDialog}>Cancel</Button>
-            <Button onClick={saveAvailability}>Save</Button>
-          </DialogActions>
-        </Dialog>
+        </Grid>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSubmit}
+          sx={{ mt: 2 }}
+        >
+          Save Changes
+        </Button>
       </Box>
-    </TableContainer>
+    </LocalizationProvider>
   );
 };
 

@@ -3,6 +3,7 @@ import {
   addTutor,
   getAllTutors,
   getTutor,
+  getTutorAvailability,
   updateTutor,
   updateTutorAvailability,
   updateTutorProfileInfo,
@@ -16,5 +17,7 @@ router
   .get("/getTutor/:id", getTutor)
   .put("/update/:id", updateTutor)
   .put("/update/profile/:id", updateTutorProfileInfo)
-  .put("/update/:tutorId/availablity", updateTutorAvailability);
+  .put("/update/availability/:tutorId", updateTutorAvailability)
+  .get("/:tutorId/availability", getTutorAvailability);
+
 export default router;

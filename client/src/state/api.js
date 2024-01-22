@@ -163,6 +163,17 @@ export const api = createApi({
     getAnalytics: builder.query({
       query: () => "system/analytics/get",
     }),
+    updateTutorAvailability: builder.mutation({
+      query: ({ tutorId, availability }) => ({
+        url: `tutor/update/availability/${tutorId}`,
+        method: "PUT",
+        body: availability,
+      }),
+    }),
+
+    getTutorAvailability: builder.query({
+      query: (tutorId) => `tutor/${tutorId}/availability`,
+    }),
   }),
 });
 
@@ -191,4 +202,6 @@ export const {
   useGetAvailableYearsQuery,
   useGetDailyDataByDateRangeQuery,
   useGetAnalyticsQuery,
+  useGetTutorAvailabilityQuery,
+  useUpdateTutorAvailabilityMutation,
 } = api;

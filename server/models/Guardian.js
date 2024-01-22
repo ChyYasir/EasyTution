@@ -15,6 +15,10 @@ const guardianSchema = new mongoose.Schema({
       ref: "Offer",
     },
   ],
+  numberOfOffers: {
+    type: Number,
+    default: 0,
+  },
   tutor: [
     {
       type: mongoose.Schema.Types.ObjectId,

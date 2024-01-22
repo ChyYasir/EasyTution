@@ -135,31 +135,8 @@ const AllGuardians = () => {
         Header: ({ column }) => <HeaderCell column={column} />,
       },
       {
-        accessorKey: "offerList",
+        accessorKey: "numberOfOffers",
         header: "Number of Offers",
-        Header: ({ column }) => <HeaderCell column={column} />,
-        Cell: ({ cell }) => {
-          // return <div onClick={() => ></div>,
-          return (
-            <>
-              <Box
-                sx={{
-                  cursor: "pointer",
-                  // backgroundColor: "red",
-                }}
-                onClick={() => {
-                  console.log(cell.getValue());
-                }}
-              >
-                {cell.getValue().length}
-              </Box>
-            </>
-          );
-        },
-      },
-      {
-        accessorKey: "tutor",
-        header: "Tutor",
         Header: ({ column }) => <HeaderCell column={column} />,
         Cell: ({ cell }) => {
           // return <div onClick={() => ></div>,
@@ -180,6 +157,34 @@ const AllGuardians = () => {
           );
         },
       },
+      // {
+      //   accessorKey: "tutor",
+      //   header: "Tutor",
+      //   Header: ({ column }) => <HeaderCell column={column} />,
+      //   Cell: ({ cell }) => {
+      //     // return <div onClick={() => ></div>,
+      //     return (
+      //       <>
+      //         <Box
+      //           sx={{
+      //             cursor: "pointer",
+      //             // backgroundColor: "red",
+      //           }}
+      //           onClick={() => {
+      //             console.log(cell.getValue());
+      //           }}
+      //         >
+      //           {cell.getValue()}
+      //           {/* {cell.getValue().map((tutor) => (
+      //             <Button variant="contained" color="primary">
+      //               {tutor._id}
+      //             </Button>
+      //           ))} */}
+      //         </Box>
+      //       </>
+      //     );
+      //   },
+      // },
       //end
     ],
     []
@@ -229,7 +234,7 @@ const AllGuardians = () => {
         onPaginationChange={setPagination}
         onSortingChange={setSorting}
         rowCount={rowCount}
-        enableRowActions
+        // enableRowActions
         renderRowActions={({ row }) => (
           <div
             style={{

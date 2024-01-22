@@ -934,7 +934,7 @@ const Profile = () => {
               )}
               {value === 3 && (
                 <Box>
-                  <AvailabilitySchedule tutor={data} />
+                  <AvailabilitySchedule tutorId={params.id} />
                 </Box>
               )}
             </Box>

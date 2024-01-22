@@ -90,6 +90,16 @@ const Dashboard = () => {
       content: `${analytics?.totalFeeTaken}৳`,
       size: "h1",
     },
+    {
+      label: "Number of Male Tutors",
+      content: `${analytics?.numberOfMaleTutors}`,
+      size: "h1",
+    },
+    {
+      label: "Number of Female Tutors",
+      content: `${analytics?.numberOfFemaleTutors}`,
+      size: "h1",
+    },
   ];
   return (
     <Box m="1.5rem 2.5rem">
