@@ -99,7 +99,13 @@ const AvailabilitySchedule = ({ tutorId }) => {
                   />
                 </Box>
               ))}
-              <Button onClick={() => addTimeSlot(day)}>Add Time Slot</Button>
+              <Button
+                color="success"
+                variant="contained"
+                onClick={() => addTimeSlot(day)}
+              >
+                Add Time Slot
+              </Button>
             </Grid>
           ))}
         </Grid>
