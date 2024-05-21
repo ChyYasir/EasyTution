@@ -44,7 +44,7 @@ const updateDailyData = async (status) => {
 export const addOffer = async (req, res) => {
   try {
     const offerData = req.body;
-
+    console.log({ offerData });
     let analytics = await Analytics.findOne({ name: "analytics" });
 
     // check whether the guardian is present or not
@@ -66,37 +66,61 @@ export const addOffer = async (req, res) => {
     }
     const newOffer = new Offer(offerData);
     guardian.numberOfOffers = guardian.numberOfOffers + 1;
-    const matchedTutors = await Tutor.find({
+
+    // Define the query based on the offer class
+    const matchQuery = {
       $and: [
         // Location matching
         { preferredLocations: { $in: newOffer.location } },
-
-        // Subjects matching
-        { preferredSubjects: { $in: newOffer.subjects } },
-
-        // Education board matching
-        { educationBoard: newOffer.educationBoard },
-
-        // Gender matching
-        { gender: newOffer.tutorGender },
-
         // Class condition
         { upToClass: { $gte: newOffer.class } },
       ],
-    });
+    };
 
-    // Create the offer and add matched tutors with their contact status
-    newOffer.matchedTutors = matchedTutors.map((tutor) => ({
-      tutor: tutor,
-      contacted: false, // Set to true if contacted
-    }));
+    if (newOffer.class > 6) {
+      matchQuery.$and.push(
+        // Subjects matching
+        { preferredSubjects: { $in: newOffer.subjects } }
+      );
+    }
+
+    const matchedTutors = await Tutor.find(matchQuery);
+    console.log({ matchedTutors });
+    console.log({ newOffer });
+    // Create the offer and add matched tutors with their contact status and scores
+    newOffer.matchedTutors = matchedTutors.map((tutor) => {
+      let score = 0;
+      if (tutor.preferredLocations.includes(newOffer.location[0]))
+        score += 4 * 2.5;
+      if (
+        newOffer.class <= 6 ||
+        tutor.preferredSubjects.some((subject) =>
+          newOffer.subjects.includes(subject)
+        )
+      )
+        score += 3 * 2;
+      if (tutor.upToClass >= newOffer.class) score += 2 * 1.5;
+      if (tutor.gender === newOffer.tutorGender) score += 1 * 0.5;
+      if (tutor.educationBoard === newOffer.educationBoard) score += 1 * 0.5;
+
+      return {
+        tutor: tutor._id,
+        contacted: false,
+        score: score,
+      };
+    });
 
     // guardian id into the offer
     newOffer.guardian = guardian._id;
     // push this offer into the guardian's offerlist
     guardian.offerList.push(newOffer._id);
+    console.log(newOffer.matchedTutors);
 
     const location = await Location.findOne({ name: newOffer.location[0] });
+    if (!location) {
+      // Handle the case where the location is not found
+      return res.status(400).json({ message: "Location not found" });
+    }
     // increment location offercount
     location.offerCount = location.offerCount + 1;
     // increment location available offer count

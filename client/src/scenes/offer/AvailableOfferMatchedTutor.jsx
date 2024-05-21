@@ -54,7 +54,7 @@ const AvailableOfferMatchedTutor = () => {
   const theme = useTheme();
 
   const { data, isLoading, isError } = useGetOfferQuery(params.id);
-
+  console.log({ data });
   // let [status, setStatus] = useState(""); // Update status
   let status = useRef(null);
   // let [assignedTutor, setAssignedTutor] = useState(""); // Update assignedTutor
@@ -86,6 +86,7 @@ const AvailableOfferMatchedTutor = () => {
   const fetchedTutors =
     data?.matchedTutors.filter((tutor) => tutor.contacted) || [];
 
+  console.log({ fetchedTutors });
   let contactedTutors = useRef();
   // const [contactedTutors, setContactedTutors] = useState(
   //
@@ -170,6 +171,11 @@ const AvailableOfferMatchedTutor = () => {
             </>
           );
         },
+      },
+      {
+        accessorKey: "score",
+        header: "Score",
+        Header: ({ column }) => <HeaderCell column={column} />,
       },
       {
         accessorKey: "tutor.name",

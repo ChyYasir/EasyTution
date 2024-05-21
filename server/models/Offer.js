@@ -49,6 +49,10 @@ const offerSchema = new mongoose.Schema(
           type: Boolean,
           default: false, // Indicates whether the tutor is contacted for this offer
         },
+        score: {
+          type: Number,
+          default: 0, // Score based on the matching criteria
+        },
       },
     ],
     status: {

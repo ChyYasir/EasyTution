@@ -46,7 +46,7 @@ const AddOffer = () => {
       alert("Offer Added Successfully!!!");
       reset();
     } catch (error) {
-      // console.log(error);
+      console.log(error);
       alert("Failed to add this Offer");
     } finally {
       setIsSubmitting(false);
