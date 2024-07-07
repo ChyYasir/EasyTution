@@ -6,33 +6,18 @@ import {
   useGetAllSubjectsQuery,
 } from "../../state/api";
 import {
-  Alert,
   Autocomplete,
   Box,
   Button,
-  Checkbox,
-  Chip,
   CircularProgress,
   Container,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
   Grid,
-  InputLabel,
   MenuItem,
-  Paper,
-  Radio,
-  RadioGroup,
-  Select,
-  Snackbar,
   TextField,
-  Typography,
 } from "@mui/material";
 import Header from "../../components/Header";
-import { useDispatch } from "react-redux";
-import { CheckBox } from "@mui/icons-material";
 import { useTheme } from "@emotion/react";
-import { validatePhoneNumber } from "../../components/validation";
+
 const AddTutor = () => {
   const theme = useTheme();
   const { data: allSubjects, isLoading: LoadingSubjects } =
@@ -50,20 +35,20 @@ const AddTutor = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [addTutor] = useAddTutorMutation();
+
   const onSubmit = async (formData) => {
     setIsSubmitting(true);
-    // console.log(formData);
     try {
       await addTutor(formData).unwrap();
       alert("Tutor Added Successfully!!!");
       reset();
     } catch (error) {
-      // console.log(error);
       alert("Failed to add tutor");
     } finally {
       setIsSubmitting(false);
     }
   };
+
   if (LoadingSubjects || LoadingLocations) {
     return (
       <Box
@@ -90,20 +75,20 @@ const AddTutor = () => {
           subtitle="Fill out this form carefully to add a new tutor."
         />
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* <Paper
-            elevation={3}
-            style={{
-              padding: "16px",
-              backgroundColor: theme.palette.background.alt,
-            }}
-          > */}
           <Grid container spacing={2} sx={{ marginTop: "1.5rem" }}>
             <Grid item xs={12}>
               <Controller
                 name="name"
                 control={control}
                 defaultValue=""
-                rules={{ required: "Name is required" }}
+                rules={{
+                  required: "Name is required",
+                  pattern: {
+                    value: /^[A-Za-z\s]+$/,
+                    message:
+                      "Name can only contain English alphabets and spaces",
+                  },
+                }}
                 render={({ field }) => (
                   <TextField
                     {...field}
@@ -126,7 +111,13 @@ const AddTutor = () => {
                 defaultValue=""
                 rules={{
                   required: "Phone Number is required",
-                  validate: validatePhoneNumber,
+                  validate: (value) => {
+                    const normalizedValue = value.replace(/^\+88/, "");
+                    if (!/^[0-9]{11}$/.test(normalizedValue)) {
+                      return "Phone Number must be exactly 11 digits (excluding +88 if present)";
+                    }
+                    return true;
+                  },
                 }}
                 render={({ field }) => (
                   <TextField
@@ -164,10 +155,9 @@ const AddTutor = () => {
                     <MenuItem value="Cambridge">Cambridge</MenuItem>
                     <MenuItem value="Edexcel">Edexcel</MenuItem>
                     <MenuItem value="IBA">IBA</MenuItem>
-                    <MenuItem value="National Curriculam">
-                      National Curriculam
+                    <MenuItem value="National Curriculum">
+                      National Curriculum
                     </MenuItem>
-                    {/* Add more options as needed */}
                   </TextField>
                 )}
               />
@@ -193,8 +183,6 @@ const AddTutor = () => {
                   >
                     <MenuItem value="Male">Male</MenuItem>
                     <MenuItem value="Female">Female</MenuItem>
-
-                    {/* Add more options as needed */}
                   </TextField>
                 )}
               />
@@ -238,7 +226,13 @@ const AddTutor = () => {
                 name="upToClass"
                 control={control}
                 defaultValue=""
-                rules={{ required: "Class information is required" }}
+                rules={{
+                  required: "Class information is required",
+                  pattern: {
+                    value: /^[0-9]+$/,
+                    message: "Class can only contain numeric characters",
+                  },
+                }}
                 render={({ field }) => (
                   <TextField
                     {...field}
@@ -300,8 +294,6 @@ const AddTutor = () => {
           >
             {isSubmitting ? "Adding..." : "Add Tutor"}
           </Button>
-
-          {/* </Paper> */}
         </form>
       </Container>
     </>

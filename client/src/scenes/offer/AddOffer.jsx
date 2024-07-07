@@ -38,6 +38,7 @@ const AddOffer = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const dispatch = useDispatch();
   const [addOffer] = useAddOfferMutation();
+
   const onSubmit = async (data) => {
     setIsSubmitting(true);
     console.log(data);
@@ -70,13 +71,10 @@ const AddOffer = () => {
       </Box>
     );
   }
+
   const subjects = allSubjects.map((subject) => subject.name);
   const locations = allLocations.map((location) => location.name);
-  // const subjects = [];
-  // const locations = [];
-  const redBorderStyle = {
-    border: "2px solid red",
-  };
+
   return (
     <>
       <Container component="main">
@@ -85,14 +83,8 @@ const AddOffer = () => {
           subtitle="Fill out this form carefully to add a new offer."
         />
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* <Paper
-              elevation={3}
-              style={{
-                padding: "16px",
-                backgroundColor: theme.palette.background.alt,
-              }}
-            > */}
           <Grid container spacing={2} sx={{ marginTop: "1.5rem" }}>
+            {/* Guardian Name and Phone Number */}
             <Grid item xs={12}>
               <Grid container spacing={2}>
                 <Grid item xs={6}>
@@ -100,7 +92,14 @@ const AddOffer = () => {
                     name="guardianName"
                     control={control}
                     defaultValue=""
-                    rules={{ required: " Guardian name is required" }}
+                    rules={{
+                      required: "Guardian name is required",
+                      pattern: {
+                        value: /^[A-Za-z\s]+$/,
+                        message:
+                          "Guardian name can only contain English alphabets and spaces",
+                      },
+                    }}
                     render={({ field }) => (
                       <TextField
                         {...field}
@@ -111,9 +110,6 @@ const AddOffer = () => {
                         helperText={
                           errors.guardianName ? errors.guardianName.message : ""
                         }
-                        // InputProps={{
-                        //   style: { color: theme.palette.secondary[100] },
-                        // }}
                         InputLabelProps={{
                           style: { color: theme.palette.secondary[100] },
                         }}
@@ -127,8 +123,14 @@ const AddOffer = () => {
                     control={control}
                     defaultValue=""
                     rules={{
-                      required: " Guardian's Phone Number is required",
-                      validate: validatePhoneNumber,
+                      required: "Guardian's Phone Number is required",
+                      validate: (value) => {
+                        const normalizedValue = value.replace(/^\+88/, "");
+                        if (!/^[0-9]{11}$/.test(normalizedValue)) {
+                          return "Phone Number must be exactly 11 digits (excluding +88 if present)";
+                        }
+                        return true;
+                      },
                     }}
                     render={({ field }) => (
                       <TextField
@@ -152,6 +154,7 @@ const AddOffer = () => {
               </Grid>
             </Grid>
 
+            {/* Class and Education Board */}
             <Grid item xs={12}>
               <Grid container spacing={2}>
                 <Grid item xs={6}>
@@ -159,7 +162,13 @@ const AddOffer = () => {
                     name="class"
                     control={control}
                     defaultValue=""
-                    rules={{ required: "Class information is required" }}
+                    rules={{
+                      required: "Class information is required",
+                      pattern: {
+                        value: /^[0-9]+$/,
+                        message: "Class can only contain numeric characters",
+                      },
+                    }}
                     render={({ field }) => (
                       <TextField
                         {...field}
@@ -194,10 +203,9 @@ const AddOffer = () => {
                         <MenuItem value="Cambridge">Cambridge</MenuItem>
                         <MenuItem value="Edexcel">Edexcel</MenuItem>
                         <MenuItem value="IBA">IBA</MenuItem>
-                        <MenuItem value="National Curriculam">
-                          National Curriculam
+                        <MenuItem value="National Curriculum">
+                          National Curriculum
                         </MenuItem>
-                        {/* Add more options as needed */}
                       </TextField>
                     )}
                   />
@@ -205,6 +213,7 @@ const AddOffer = () => {
               </Grid>
             </Grid>
 
+            {/* Tutor Gender */}
             <Grid item xs={12}>
               <Controller
                 name="tutorGender"
@@ -218,21 +227,22 @@ const AddOffer = () => {
                     label="Preferred Tutor Gender"
                     variant="outlined"
                     fullWidth
-                    error={!!errors.gender}
-                    helperText={errors.gender ? errors.gender.message : ""}
+                    error={!!errors.tutorGender}
+                    helperText={
+                      errors.tutorGender ? errors.tutorGender.message : ""
+                    }
                     InputLabelProps={{
                       style: { color: theme.palette.secondary[100] },
                     }}
                   >
                     <MenuItem value="Male">Male</MenuItem>
                     <MenuItem value="Female">Female</MenuItem>
-
-                    {/* Add more options as needed */}
                   </TextField>
                 )}
               />
             </Grid>
 
+            {/* Subjects */}
             <Grid item xs={12}>
               <Controller
                 name="subjects"
@@ -266,12 +276,20 @@ const AddOffer = () => {
               />
             </Grid>
 
+            {/* Days Per Week */}
             <Grid item xs={12}>
               <Controller
                 name="daysPerWeek"
                 control={control}
                 defaultValue=""
-                rules={{ required: "Days Per Week information is required" }}
+                rules={{
+                  required: "Days Per Week information is required",
+                  pattern: {
+                    value: /^[0-9]+$/,
+                    message:
+                      "Days Per Week can only contain numeric characters",
+                  },
+                }}
                 render={({ field }) => (
                   <TextField
                     {...field}
@@ -290,6 +308,7 @@ const AddOffer = () => {
               />
             </Grid>
 
+            {/* Location */}
             <Grid item xs={12}>
               <Controller
                 name="location"
@@ -297,7 +316,6 @@ const AddOffer = () => {
                 render={({ field }) => (
                   <Autocomplete
                     {...field}
-                    // multiple
                     id="location"
                     options={locations}
                     defaultValue={[]}
@@ -322,6 +340,8 @@ const AddOffer = () => {
                 )}
               />
             </Grid>
+
+            {/* Address */}
             <Grid item xs={12}>
               <Controller
                 name="address"
@@ -343,12 +363,20 @@ const AddOffer = () => {
                 )}
               />
             </Grid>
+
+            {/* Salary */}
             <Grid item xs={12}>
               <Controller
                 name="salary"
                 control={control}
                 defaultValue=""
-                rules={{ required: "Salary information is required" }}
+                rules={{
+                  required: "Salary information is required",
+                  pattern: {
+                    value: /^[0-9]+$/,
+                    message: "Salary can only contain numeric characters",
+                  },
+                }}
                 render={({ field }) => (
                   <TextField
                     {...field}
@@ -374,8 +402,6 @@ const AddOffer = () => {
           >
             {isSubmitting ? "Adding Offer..." : "Add Offer"}
           </Button>
-
-          {/* </Paper> */}
         </form>
       </Container>
     </>
